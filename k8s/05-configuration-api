@@ -1,0 +1,20 @@
+## Criando o namespace
+kubectl create -f 10-namespace.yaml
+
+## Criando a secret de acesso o registry
+# kubectl create secret docker-registry registrysecretkeynhhb --namespace=box --docker-username=drachenfutter --docker-password=
+
+## Criando volumes
+kubectl create -f 15-persistent-volume-claim.yaml
+
+
+## Criando o service
+kubectl create -f 20-service-mongo.yaml
+kubectl create -f 25-service-api.yaml
+
+## Criando o deployment
+kubectl create -f 30-deployment-mongo.yaml
+kubectl create -f 35-deployment-api.yaml
+
+## Criando o ingress
+kubectl create -f 45-ingress-interno.yaml

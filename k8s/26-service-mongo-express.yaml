@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-express-service
+  namespace: conta
+spec:
+  type: ClusterIP
+  #type: NodePort
+  selector:
+    app: mongo-express
+  ports:
+  - name: mongo-express
+    port: 80
+    targetPort: 8081

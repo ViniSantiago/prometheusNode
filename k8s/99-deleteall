@@ -1,0 +1,2 @@
+# delete all objects
+kubectl delete namespaces conta

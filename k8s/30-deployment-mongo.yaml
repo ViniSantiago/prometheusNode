@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  namespace: conta
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb-container
+        image: mongo
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: "box"
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: "box"
+        ports:
+        - containerPort: 27017
+          name: service
+        volumeMounts:
+          - name: data
+            mountPath: /data/db
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: mongodb-pvc

@@ -1,0 +1,12 @@
+#                                    node-exporter 
+#                                    -------------
+
+## Criando o service
+kubectl create -f 28-service-web.yaml
+
+## Criando o deployment
+kubectl create -f 38-deployment-web.yaml
+
+## Criando o ingress
+kubectl create -f 48-ingress-interno-web.yaml
+kubectl create -f 48-ingress-externo-web.yaml

@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-exporter
+  namespace: conta
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb-exporter
+  template:
+    metadata:
+      labels:
+        app: mongodb-exporter
+    spec:
+      containers:
+      - name: mongodb-exporter-container
+        image: targetprocess/mongodb_exporter
+        ports:
+        - containerPort: 9001
+          name: service
+        env:
+        - name: MONGODB_URL
+          value: "mongodb://mongodb-service:27017/conta"          

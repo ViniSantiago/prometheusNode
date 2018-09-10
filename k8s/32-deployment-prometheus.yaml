@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  namespace: conta
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+      - name: prometheus-container
+        image: registry.io.bb.com.br:3389/box/prometheus:lastest
+        ports:
+        - containerPort: 9090
+          name: service
+        volumeMounts:
+          - name: data
+            mountPath: /prometheus
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: prometheus-pvc

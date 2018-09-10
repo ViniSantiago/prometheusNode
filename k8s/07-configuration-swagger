@@ -1,0 +1,11 @@
+#                                    node-exporter 
+#                                    -------------
+
+## Criando o service
+kubectl create -f 27-service-swagger.yaml
+
+## Criando o deployment
+kubectl create -f 37-deployment-swagger.yaml
+
+## Criando o ingress
+kubectl create -f 47-ingress-interno-swagger.yaml

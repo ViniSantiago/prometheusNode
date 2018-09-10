@@ -1,0 +1,12 @@
+FROM api-service:latest
+WORKDIR /var/app
+ADD package.json /var/app/
+
+ENV NODE_ENV dev
+
+ADD test test
+
+RUN npm update 
+RUN npm install
+ENTRYPOINT ["npm", "run"]
+CMD ["test"]

@@ -1,0 +1,140 @@
+version: '3'
+
+services:
+
+###############################################################################
+# Mongo - Banco de Dados Box
+###############################################################################
+  mongo:
+    image: mongo:3.6.6
+    volumes:
+      - box-volume-des:/data/mongo/box
+    ports:
+      - '27017:27017'
+    environment: 
+      MONGO_INITDB_ROOT_USERNAME: box
+      MONGO_INITDB_ROOT_PASSWORD: box 
+
+###############################################################################
+# BOX - Node Application
+###############################################################################
+  api-service:
+    build: .
+    image: api-service:latest
+    ports:
+      - '3443:3443'
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/box
+      - MONGO_USER=box
+      - MONGO_PWD=box
+      - API_PORT=3443
+      - KERNEL_AUTHORIZATION=nUgVsgTqYjvNd6EV6Ftmq7ZxYaEkM8Cl
+      - KERNEL_ACCOUNT=https://10.254.0.118:8081/kernel/api/v0/accounts
+    depends_on:
+      - mongo
+
+###############################################################################
+# mongo-express - Web-based MongoDB admin interface
+###############################################################################
+  mongo-express:
+    image: mongo-express:0.45.0
+    environment:
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ADMINUSERNAME: box
+      ME_CONFIG_MONGODB_ADMINPASSWORD: box
+    ports:
+      - '8081:8081'
+    depends_on:
+      - mongo      
+
+###############################################################################
+# Swagger UI - API Development Tools
+###############################################################################
+  swagger:
+    image: registry.io.bb.com.br:3389/box/swagger:latest
+    ports:
+      - "8009:8080"
+    environment:
+      SWAGGER_JSON: /doc/swagger.json
+
+###############################################################################
+# Prometheus - Monitoring system & time series database
+###############################################################################
+  prometheus-service:
+    image: registry.io.bb.com.br:3389/box/prometheus:latest
+    volumes:
+      - prometheus:/prometheus
+    ports:
+      - '9090:9090'
+
+  node-exporter-service:
+    image: prom/node-exporter:latest
+    ports:
+      - '9100:9100'
+
+  mongodb-exporter-service:
+    image: targetprocess/mongodb_exporter
+    ports:
+      - "9001:9001"
+    environment:
+      MONGODB_URL: "mongo:27017"
+
+###############################################################################
+# Grafana - The open platform for beautiful analytics and monitoring
+###############################################################################
+  grafana:
+    image: registry.io.bb.com.br:3389/box/grafana:latest
+    volumes:
+      - grafana:/data
+    ports:
+      - "3000:3000"
+
+###############################################################################
+# Mocha - Integration Test
+###############################################################################
+  api-service-test:
+    build: 
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: teste-api
+    ports:
+      - '3001:3443'
+    environment:
+      - MONGO_HOST=mongo
+      - MONGO_PORT=27017
+      - MONGO_URL=mongodb://mongo:27017/test  
+      - MONGO_PWD=box
+      - MONGO_USER=box  
+      - KERNEL_AUTHORIZATION=nUgVsgTqYjvNd6EV6Ftmq7ZxYaEkM8Cl
+      - KERNEL_ACCOUNT=https://10.254.0.118:8081/kernel/api/v0/accounts
+    depends_on:
+      - mongo  
+
+################################################################################
+# Portainer for Docker monitoring
+################################################################################
+
+  portainer:
+    image: portainer/portainer
+    ports:
+      - "9000:9000"
+    command: -H unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+
+# Networks config
+networks:
+  default:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.5.0/24
+
+# Volume default docker
+# remove all: docker volume rm $(docker volume ls -q)
+volumes:
+  box-volume-des:
+  grafana:
+  prometheus:
+  portainer_data:

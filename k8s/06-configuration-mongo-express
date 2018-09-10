@@ -1,0 +1,11 @@
+#                                    node-exporter 
+#                                    -------------
+
+## Criando o service
+kubectl create -f 26-service-mongo-express.yaml
+
+## Criando o deployment
+kubectl create -f 36-deployment-mongo-express.yaml
+
+## Criando o ingress
+kubectl create -f 46-ingress-interno-mongo-express.yaml

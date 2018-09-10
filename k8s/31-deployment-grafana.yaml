@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: conta
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - name: grafana-container
+        image: registry.io.bb.com.br:3389/box/grafana:0.0.1
+        ports:
+        - containerPort: 3000
+          name: service
+        volumeMounts:
+          - name: data
+            mountPath: /data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: grafana-pvc

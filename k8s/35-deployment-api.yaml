@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: conta-api
+  namespace: conta
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: conta-api
+  template:
+    metadata:
+      labels:
+        app: conta-api
+    spec:
+      containers:
+      - name: conta-api
+        image: registry.io.bb.com.br:3389/box/api:0.0.1
+        ports:
+        - containerPort: 3443
+        env:
+        - name: MONGO_URL
+          value: "mongodb://mongodb-service:27017/conta"
+        - name: API_PORT
+          value: "3443"
+        - name: MONGO_USER
+          value: box
+        - name: MONGO_PWD
+          value: box
+        - name: KERNEL_AUTHORIZATION
+          value: nUgVsgTqYjvNd6EV6Ftmq7ZxYaEkM8Cl
+        - name: KERNEL_ACCOUNT
+          value: https://api.kernel.io.bb.com.br/kernel/api/v0/accounts
+      imagePullSecrets:
+       - name: registrysecretkey

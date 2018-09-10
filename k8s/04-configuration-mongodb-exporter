@@ -1,0 +1,12 @@
+#                                    node-exporter 
+#                                    -------------
+
+## Criando o service
+kubectl create -f 24-service-mongodb-exporter.yaml
+
+## Criando o deployment
+kubectl create -f 34-deployment-mongodb-exporter.yaml
+
+## Criando o ingress
+## - não é necessário executar, pois não precisa expor
+#kubectl create -f 44-ingress-interno-mongodb-exporter.yaml

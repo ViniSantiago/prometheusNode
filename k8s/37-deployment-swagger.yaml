@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swagger
+  namespace: conta
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: swagger
+  template:
+    metadata:
+      labels:
+        app: swagger
+    spec:
+      containers:
+      - name: swagger
+        image: registry.io.bb.com.br:3389/box/swagger:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SWAGGER_JSON
+          value: /doc/swagger.json
