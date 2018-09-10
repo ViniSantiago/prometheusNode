@@ -1,4 +1,4 @@
-# Box API - Version 0
+# HOBB API - Version 0
 #--------------------
 
 # Run:
@@ -16,17 +16,17 @@ http://localhost:3443
 /api/v0/user/listall/    - GET 
 
 # Build:
-- docker build -t registry.io.bb.com.br:3389/box/api:0.0.1 -t registry.io.bb.com.br:3389/box/api:latest .
-- docker push registry.io.bb.com.br:3389/box/api:0.0.1
-- docker push registry.io.bb.com.br:3389/box/api:latest
+- docker build -t registry.io.bb.com.br:3389/hobb/api:0.0.1 -t registry.io.bb.com.br:3389/hobb/api:latest .
+- docker push registry.io.bb.com.br:3389/hobb/api:0.0.1
+- docker push registry.io.bb.com.br:3389/hobb/api:latest
 
 # Local Grafana
 http://localhost:3000/
 
-# Box App
+# HOBB App
 http://localhost:3443
 
-# Box Metrics
+# HOBB Metrics
 http://localhost:3443/metrics/
 
 # Local Swagger UI

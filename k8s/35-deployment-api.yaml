@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: conta-api
-        image: registry.io.bb.com.br:3389/box/api:0.0.1
+        image: registry.io.bb.com.br:3389/hobb/api:0.0.1
         ports:
         - containerPort: 3443
         env:
@@ -24,9 +24,9 @@ spec:
         - name: API_PORT
           value: "3443"
         - name: MONGO_USER
-          value: box
+          value: admin
         - name: MONGO_PWD
-          value: box
+          value: admin
         - name: KERNEL_AUTHORIZATION
           value: nUgVsgTqYjvNd6EV6Ftmq7ZxYaEkM8Cl
         - name: KERNEL_ACCOUNT

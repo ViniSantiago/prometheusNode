@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
       - name: web
-        image: registry.io.bb.com.br:3389/box/web:latest
+        image: registry.io.bb.com.br:3389/hobb/web:latest
         ports:
         - containerPort: 3000

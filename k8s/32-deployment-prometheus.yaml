@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: prometheus-container
-        image: registry.io.bb.com.br:3389/box/prometheus:lastest
+        image: registry.io.bb.com.br:3389/hobb/prometheus:lastest
         ports:
         - containerPort: 9090
           name: service

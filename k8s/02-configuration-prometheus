@@ -5,7 +5,7 @@
 #kubectl create -f 10-namespace.yaml
 
 ## Criando a secret de acesso o registry
-# kubectl create secret docker-registry registrysecretkeynhhb --namespace=box --docker-username=drachenfutter --docker-password=
+# kubectl create secret docker-registry registrysecretkeynhhb --namespace=hobb --docker-username=drachenfutter --docker-password=
 
 ## Criando volumes
 kubectl create -f 17-persistent-volume-claim.yaml

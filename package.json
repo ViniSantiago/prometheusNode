@@ -1,24 +1,24 @@
 {
-  "name": "boxapi",
-  "version": "0.0.1",
-  "description": "API do projeto BOX",
-  "author": "Arquitetura 3.0 - Time Conta Corrente",
-  "main": "api.js",
-  "scripts": {
-    "start": "node api.js",
-    "test": "mocha test"
-  },
-  "dependencies": {
-    "express": "^4.16.1",
-    "mongodb": "^3.1.1",
-    "mongoose": "^5.2.10",
-    "node-uuid": "^1.4.8",
-    "prom-client": "^11.1.1",
-    "request": "^2.88.0"
-  },
-  "devDependencies": {
-    "mocha": "5.2.0",
-    "supertest": "3.1.0",
-    "chai": "4.1.2"
-  }
+    "name": "hobbapi",
+    "version": "0.0.1",
+    "description": "API do projeto HOBB",
+    "author": "Arquitetura 3.0 - Time Conta Corrente",
+    "main": "api.js",
+    "scripts": {
+        "start": "node api.js",
+        "test": "mocha test"
+    },
+    "dependencies": {
+        "express": "^4.16.1",
+        "mongodb": "^3.1.1",
+        "mongoose": "^5.2.10",
+        "node-uuid": "^1.4.8",
+        "prom-client": "^11.1.1",
+        "request": "^2.88.0"
+    },
+    "devDependencies": {
+        "mocha": "5.2.0",
+        "supertest": "3.1.0",
+        "chai": "4.1.2"
+    }
 }

@@ -18,9 +18,9 @@ spec:
         image: mongo
         env:
         - name: MONGO_INITDB_ROOT_USERNAME
-          value: "box"
+          value: "admin"
         - name: MONGO_INITDB_ROOT_PASSWORD
-          value: "box"
+          value: "admin"
         ports:
         - containerPort: 27017
           name: service

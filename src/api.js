@@ -12,7 +12,7 @@ var express = require('express'),
 
 
 
-console.log('\nIniciando Box Api...\n');
+console.log('\nIniciando HOBB Api...\n');
 console.log('---   Variaveis consideradas   ---');
 console.log('MONGO_URL  . . . . .: ' + Config.Env.db.url);
 console.log('MONGO_USER . . . . .: ' + Config.Env.db.user);
@@ -24,25 +24,25 @@ console.log('');
 
 var mongo_option = {
     auth: {
-      authdb: "admin",
+        authdb: "admin",
     },
     useNewUrlParser: true,
     pass: Config.Env.db.pwd,
     user: Config.Env.db.user,
-  }
-  
+}
+
 
 mongoose.Promise = global.Promise;
 mongoose.connect(Config.Env.db.url, mongo_option, function(error) {
     if (error) {
         console.log('Erro na conexao com Mongo: ' + error)
-        console.log('\nFinalizando Box API...\n')
+        console.log('\nFinalizando HOBB API...\n')
         process.exit(1);
     }
 });
 
 const collectDefaultMetrics = Prometheus.collectDefaultMetrics;
-collectDefaultMetrics({ prefix: 'box_' });
+collectDefaultMetrics({ prefix: 'hobb_' });
 collectDefaultMetrics({ timeout: 5000 });
 
 app.use(bodyParser.urlencoded({ extended: true }));

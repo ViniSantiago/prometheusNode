@@ -3,20 +3,20 @@ version: '3'
 services:
 
 ###############################################################################
-# Mongo - Banco de Dados Box
+# Mongo - Banco de Dados
 ###############################################################################
-  mongo:
+  hobb-db:
     image: mongo:3.6.6
     volumes:
-      - box-volume-des:/data/mongo/box
+      - mongo_data:/data/db
     ports:
       - '27017:27017'
     environment: 
-      MONGO_INITDB_ROOT_USERNAME: box
-      MONGO_INITDB_ROOT_PASSWORD: box 
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
 
 ###############################################################################
-# BOX - Node Application
+# API - Node Application
 ###############################################################################
   api-service:
     build: .
@@ -24,14 +24,12 @@ services:
     ports:
       - '3443:3443'
     environment:
-      - MONGO_URL=mongodb://mongo:27017/box
-      - MONGO_USER=box
-      - MONGO_PWD=box
+      - MONGO_URL=mongodb://hobb_db:27017/hobb
+      - MONGO_USER=admin
+      - MONGO_PWD=admin
       - API_PORT=3443
       - KERNEL_AUTHORIZATION=nUgVsgTqYjvNd6EV6Ftmq7ZxYaEkM8Cl
       - KERNEL_ACCOUNT=https://10.254.0.118:8081/kernel/api/v0/accounts
-    depends_on:
-      - mongo
 
 ###############################################################################
 # mongo-express - Web-based MongoDB admin interface
@@ -40,18 +38,16 @@ services:
     image: mongo-express:0.45.0
     environment:
       ME_CONFIG_MONGODB_PORT: 27017
-      ME_CONFIG_MONGODB_ADMINUSERNAME: box
-      ME_CONFIG_MONGODB_ADMINPASSWORD: box
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: admin
     ports:
       - '8081:8081'
-    depends_on:
-      - mongo      
 
 ###############################################################################
 # Swagger UI - API Development Tools
 ###############################################################################
   swagger:
-    image: registry.io.bb.com.br:3389/box/swagger:latest
+    image: registry.io.bb.com.br:3389/hobb/swagger:latest
     ports:
       - "8009:8080"
     environment:
@@ -61,7 +57,7 @@ services:
 # Prometheus - Monitoring system & time series database
 ###############################################################################
   prometheus-service:
-    image: registry.io.bb.com.br:3389/box/prometheus:latest
+    image: registry.io.bb.com.br:3389/hobb/prometheus:latest
     volumes:
       - prometheus:/prometheus
     ports:
@@ -77,13 +73,13 @@ services:
     ports:
       - "9001:9001"
     environment:
-      MONGODB_URL: "mongo:27017"
+      MONGODB_URL: "hobb_db:27017"
 
 ###############################################################################
 # Grafana - The open platform for beautiful analytics and monitoring
 ###############################################################################
   grafana:
-    image: registry.io.bb.com.br:3389/box/grafana:latest
+    image: registry.io.bb.com.br:3389/hobb/grafana:latest
     volumes:
       - grafana:/data
     ports:
@@ -100,15 +96,13 @@ services:
     ports:
       - '3001:3443'
     environment:
-      - MONGO_HOST=mongo
+      - MONGO_HOST=hobb_db
       - MONGO_PORT=27017
-      - MONGO_URL=mongodb://mongo:27017/test  
-      - MONGO_PWD=box
-      - MONGO_USER=box  
+      - MONGO_URL=mongodb://hobb_db:27017/test  
+      - MONGO_PWD=admin
+      - MONGO_USER=admin  
       - KERNEL_AUTHORIZATION=nUgVsgTqYjvNd6EV6Ftmq7ZxYaEkM8Cl
       - KERNEL_ACCOUNT=https://10.254.0.118:8081/kernel/api/v0/accounts
-    depends_on:
-      - mongo  
 
 ################################################################################
 # Portainer for Docker monitoring
@@ -134,7 +128,7 @@ networks:
 # Volume default docker
 # remove all: docker volume rm $(docker volume ls -q)
 volumes:
-  box-volume-des:
+  mongo_data:
   grafana:
   prometheus:
   portainer_data:

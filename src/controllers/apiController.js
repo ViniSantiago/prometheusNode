@@ -11,269 +11,269 @@ var Prometheus = require("prom-client");
 
 // Prometheus Counter for API calls
 const PrometheusMetrics = {
-  requestCounter: new Prometheus.Counter({
-    name: "box_api",
-    help: "Number of routers call",
-    labelNames: ["method", "path", "statusCode"]
-  })
+    requestCounter: new Prometheus.Counter({
+        name: "hobb_api",
+        help: "Number of routers call",
+        labelNames: ["method", "path", "statusCode"]
+    })
 };
 
-exports.welcome = function (req, res) {
-  PrometheusMetrics.requestCounter.inc({
-    method: req.method,
-    path: req.path,
-    statusCode: res.statusCode
-  });
-  return res.json({
-    box: "Projeto Box - Versão Inicial"
-  });
-};
-
-exports.list_all_users = function (req, res) {
-  User.find({}, function (err, user) {
-    if (err) {
-      res.status(403).json({
-        error: {
-          code: 1,
-          message: err
-        }
-      });
-    }
-    res.json({
-      success: {
-        data: user
-      }
+exports.welcome = function(req, res) {
+    PrometheusMetrics.requestCounter.inc({
+        method: req.method,
+        path: req.path,
+        statusCode: res.statusCode
     });
-  });
-  PrometheusMetrics.requestCounter.inc({
-    method: req.method,
-    path: req.path,
-    statusCode: res.statusCode
-  });
+    return res.json({
+        hobb: "Projeto HOBB - Versão Inicial"
+    });
 };
 
-exports.sign_up_user = function (req, res) {
-  console.log("Sign_up Body\n" + Util.inspect(req.body, false, null));
-  newUserValidation(req.body).then(
-    function (resultValidation) {
-      registerKernel(req.body).then(
-        function (resultKernel) {
-          req.body.userid = uuid.v4();
-          req.body.kernelid = resultKernel;
-          var new_user = new User(req.body);
-          new_user.save(function (err, user) {
-            if (err) {
-              return res.status(403).json({
+exports.list_all_users = function(req, res) {
+    User.find({}, function(err, user) {
+        if (err) {
+            res.status(403).json({
                 error: {
-                  code: 100,
-                  message: err
+                    code: 1,
+                    message: err
                 }
-              });
-            } else {
-              return res.json({
-                success: {
-                  data: user
-                }
-              });
-            }
-          });
-        },
-        function (err) {
-          // Erro registrando ID o Kernel
-          return res.status(403).json(err);
+            });
         }
-      );
-    },
-    function (err) {
-      // Erro na validacao dos Dados
-      return res.status(403).json(err);
-    }
-  );
-  PrometheusMetrics.requestCounter.inc({
-    method: req.method,
-    path: req.path,
-    statusCode: res.statusCode
-  });
-};
-
-exports.get_me = function (req, res) {
-  User.findOne({
-    email: req.body.email
-  }, null, function (err, user) {
-    if (err) {
-      res.status(403).json({
-        error: {
-          code: 1,
-          message: err
-        }
-      });
-    } else {
-      if (!user) {
-        res.status(403).json({
-          error: {
-            code: 100,
-            message: 'User not found'
-          }
-        });
-      } else {
         res.json({
-          success: {
-            data: user
-          }
+            success: {
+                data: user
+            }
         });
-      }
-    }
-  });
-  PrometheusMetrics.requestCounter.inc({
-    method: req.method,
-    path: req.path,
-    statusCode: res.statusCode
-  });
+    });
+    PrometheusMetrics.requestCounter.inc({
+        method: req.method,
+        path: req.path,
+        statusCode: res.statusCode
+    });
 };
 
-exports.delete_user = function (req, res) {
-  User.findByIdAndRemove(req.body._id, (err, result) => {
-    if (err) {
-      res.status(403).json({
-        error: {
-          code: 1,
-          message: 'Error excluding user with _id: ' + req.body._id
+exports.sign_up_user = function(req, res) {
+    console.log("Sign_up Body\n" + Util.inspect(req.body, false, null));
+    newUserValidation(req.body).then(
+        function(resultValidation) {
+            registerKernel(req.body).then(
+                function(resultKernel) {
+                    req.body.userid = uuid.v4();
+                    req.body.kernelid = resultKernel;
+                    var new_user = new User(req.body);
+                    new_user.save(function(err, user) {
+                        if (err) {
+                            return res.status(403).json({
+                                error: {
+                                    code: 100,
+                                    message: err
+                                }
+                            });
+                        } else {
+                            return res.json({
+                                success: {
+                                    data: user
+                                }
+                            });
+                        }
+                    });
+                },
+                function(err) {
+                    // Erro registrando ID o Kernel
+                    return res.status(403).json(err);
+                }
+            );
+        },
+        function(err) {
+            // Erro na validacao dos Dados
+            return res.status(403).json(err);
         }
-      });
-    } else {
-      res.json({
-        success: {
-          message: "Success excluding user",
-          data: result
+    );
+    PrometheusMetrics.requestCounter.inc({
+        method: req.method,
+        path: req.path,
+        statusCode: res.statusCode
+    });
+};
+
+exports.get_me = function(req, res) {
+    User.findOne({
+        email: req.body.email
+    }, null, function(err, user) {
+        if (err) {
+            res.status(403).json({
+                error: {
+                    code: 1,
+                    message: err
+                }
+            });
+        } else {
+            if (!user) {
+                res.status(403).json({
+                    error: {
+                        code: 100,
+                        message: 'User not found'
+                    }
+                });
+            } else {
+                res.json({
+                    success: {
+                        data: user
+                    }
+                });
+            }
         }
-      });
-    }
-  });
-  PrometheusMetrics.requestCounter.inc({
-    method: req.method,
-    path: req.path,
-    statusCode: res.statusCode
-  });
+    });
+    PrometheusMetrics.requestCounter.inc({
+        method: req.method,
+        path: req.path,
+        statusCode: res.statusCode
+    });
+};
+
+exports.delete_user = function(req, res) {
+    User.findByIdAndRemove(req.body._id, (err, result) => {
+        if (err) {
+            res.status(403).json({
+                error: {
+                    code: 1,
+                    message: 'Error excluding user with _id: ' + req.body._id
+                }
+            });
+        } else {
+            res.json({
+                success: {
+                    message: "Success excluding user",
+                    data: result
+                }
+            });
+        }
+    });
+    PrometheusMetrics.requestCounter.inc({
+        method: req.method,
+        path: req.path,
+        statusCode: res.statusCode
+    });
 };
 
 function newUserValidation(_user) {
-  /* Verifica existencia de mesmo email para outro usuario */
-  return new Promise(function (resolve, reject) {
-    User.findOne({
-      email: _user.email
-    }, null, function (err, user) {
-      if (err) {
-        reject({
-          error: {
-            code: 200,
-            message: "Error validating email - " + err
-          }
+    /* Verifica existencia de mesmo email para outro usuario */
+    return new Promise(function(resolve, reject) {
+        User.findOne({
+            email: _user.email
+        }, null, function(err, user) {
+            if (err) {
+                reject({
+                    error: {
+                        code: 200,
+                        message: "Error validating email - " + err
+                    }
+                });
+            }
+            if (user) {
+                reject({
+                    error: {
+                        code: 1,
+                        message: "Email '" + _user.email + "' already been taken by someone else",
+                        userid: user.userid
+                    }
+                });
+            } else {
+                resolve();
+            }
         });
-      }
-      if (user) {
-        reject({
-          error: {
-            code: 1,
-            message: "Email '" + _user.email + "' already been taken by someone else",
-            userid: user.userid
-          }
-        });
-      } else {
-        resolve();
-      }
     });
-  });
 }
 
 function registerKernel(_user) {
-  var _data = {
-    owner: _user.userid
-  };
-  var _header = {
-    "content-type": "application/json",
-    authorization: Config.Env.kernel.authorization
-  };
+    var _data = {
+        owner: _user.userid
+    };
+    var _header = {
+        "content-type": "application/json",
+        authorization: Config.Env.kernel.authorization
+    };
 
-  return new Promise(function (resolve, reject) {
-    request.post({
-        headers: _header,
-        url: Config.Env.kernel.url_kernel_account,
-        body: _data,
-        strictSSL: false,
-        timeout: 1500,
-        json: true
-      },
-      function (erro, resp, body) {
-        if (erro) {
-          console.log("Error reaching Kernel: " + erro);
-          reject({
-            error: {
-              code: 300,
-              message: "Kernel user registration error: " + erro
+    return new Promise(function(resolve, reject) {
+        request.post({
+                headers: _header,
+                url: Config.Env.kernel.url_kernel_account,
+                body: _data,
+                strictSSL: false,
+                timeout: 1500,
+                json: true
+            },
+            function(erro, resp, body) {
+                if (erro) {
+                    console.log("Error reaching Kernel: " + erro);
+                    reject({
+                        error: {
+                            code: 300,
+                            message: "Kernel user registration error: " + erro
+                        }
+                    });
+                } else {
+                    console.log("Kernel call body: " + JSON.stringify(body));
+                    console.log("Kernel call OK: " + body.id);
+                    resolve(body.id);
+                }
             }
-          });
-        } else {
-          console.log("Kernel call body: " + JSON.stringify(body));
-          console.log("Kernel call OK: " + body.id);
-          resolve(body.id);
-        }
-      }
-    );
-  });
+        );
+    });
 }
 
-exports.list_product = function (req, res) {
-  Product.find({}, function (err, product) {
-    if (err) {
-      res.status(403).json({
-        error: {
-          code: 1,
-          message: err
+exports.list_product = function(req, res) {
+    Product.find({}, function(err, product) {
+        if (err) {
+            res.status(403).json({
+                error: {
+                    code: 1,
+                    message: err
+                }
+            });
         }
-      });
-    }
-    res.json({
-      success: {
-        data: product
-      }
+        res.json({
+            success: {
+                data: product
+            }
+        });
     });
-  });
-  PrometheusMetrics.requestCounter.inc({
-    method: req.method,
-    path: req.path,
-    statusCode: res.statusCode
-  });
+    PrometheusMetrics.requestCounter.inc({
+        method: req.method,
+        path: req.path,
+        statusCode: res.statusCode
+    });
 };
 
-exports.create_product = async function (req, res) {
-  var resultKernel = await registerKernel(req.body);
-  await Product.create({
-      kernelid: resultKernel,
-      description: req.body.description,
-      balance: 0,
-      balanceAsString: "0",
-      transaction: [],
-      tags: req.body.tags
-    },
-    function (error, product) {
-      if (error) {
-        res.status(403).json({
-          error: {
-            code: 1,
-            message: error
-          }
-        });
-      }
-      res.json({
-        success: {
-          data: product
+exports.create_product = async function(req, res) {
+    var resultKernel = await registerKernel(req.body);
+    await Product.create({
+            kernelid: resultKernel,
+            description: req.body.description,
+            balance: 0,
+            balanceAsString: "0",
+            transaction: [],
+            tags: req.body.tags
+        },
+        function(error, product) {
+            if (error) {
+                res.status(403).json({
+                    error: {
+                        code: 1,
+                        message: error
+                    }
+                });
+            }
+            res.json({
+                success: {
+                    data: product
+                }
+            });
         }
-      });
-    }
-  );
-  PrometheusMetrics.requestCounter.inc({
-    method: req.method,
-    path: req.path,
-    statusCode: res.statusCode
-  });
+    );
+    PrometheusMetrics.requestCounter.inc({
+        method: req.method,
+        path: req.path,
+        statusCode: res.statusCode
+    });
 };
