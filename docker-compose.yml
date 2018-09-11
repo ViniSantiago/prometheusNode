@@ -73,8 +73,12 @@ services:
     image: targetprocess/mongodb_exporter
     ports:
       - "9001:9001"
-    environment:
-      MONGODB_URL: "hobb-db:27017"
+    # environment:
+      # MONGODB_URL: "hobb-db:27017"
+    command: 
+      -mongodb.uri=mongodb://admin:admin@hobb-db:27017
+      -mongodb.collect.replset=false
+      -mongodb.collect.oplog=false 
 
 ###############################################################################
 # Grafana - The open platform for beautiful analytics and monitoring
@@ -102,8 +106,6 @@ services:
       - MONGO_URL=mongodb://hobb_db:27017/test  
       - MONGO_PWD=admin
       - MONGO_USER=admin  
-    #  - KERNEL_AUTHORIZATION=nUgVsgTqYjvNd6EV6Ftmq7ZxYaEkM8Cl
-    #  - KERNEL_ACCOUNT=https://10.254.0.118:8081/kernel/api/v0/accounts
       - KERNEL_AUTHORIZATION=7egQpg76YVH1YSkdUpzJL8MIbafZ2DJQ6AMFHV6n
       - KERNEL_ACCOUNT=https://api.kernel.io.bb.com.br/v0/accounts
 
