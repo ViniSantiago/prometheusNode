@@ -1,0 +1,129 @@
+version: '3'
+
+services:
+
+###############################################################################
+# Mongo - Banco de Dados
+###############################################################################
+  hobb-db:
+    image: mongo:3.6.6
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - '27017:27017'
+    environment: 
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+
+###############################################################################
+# API - Node Application
+###############################################################################
+   
+  api-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.debug
+    image: api-service:latest
+    command: nodemon -L --inspect=0.0.0.0:5858 api.js
+    ports:
+      - '3443:3443'
+    volumes:
+      - ./src/:/var/app
+      - /var/app/node_modules
+    environment:
+      - MONGO_URL=mongodb://hobb-db:27017/hobb
+      - MONGO_USER=admin
+      - MONGO_PWD=admin
+      - API_PORT=3443
+      - KERNEL_AUTHORIZATION=7egQpg76YVH1YSkdUpzJL8MIbafZ2DJQ6AMFHV6n
+      - KERNEL_ACCOUNT=https://api.kernel.io.bb.com.br/v0/accounts
+
+
+###############################################################################
+# mongo-express - Web-based MongoDB admin interface
+###############################################################################
+  mongo-express:
+    image: mongo-express:0.45.0
+    environment:
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_SERVER: hobb-db
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: admin
+    ports:
+      - '8081:8081'
+
+###############################################################################
+# Swagger UI - API Development Tools
+###############################################################################
+  swagger:
+    image: registry.io.bb.com.br:3389/hobb/swagger:latest
+    ports:
+      - "8009:8080"
+    environment:
+      SWAGGER_JSON: /doc/swagger.json
+
+###############################################################################
+# Prometheus - Monitoring system & time series database
+###############################################################################
+  prometheus-service:
+    image: registry.io.bb.com.br:3389/hobb/prometheus:latest
+    volumes:
+      - prometheus:/prometheus
+    ports:
+      - '9090:9090'
+
+  node-exporter-service:
+    image: prom/node-exporter:latest
+    ports:
+      - '9100:9100'
+
+  mongodb-exporter-service:
+    image: targetprocess/mongodb_exporter
+    ports:
+      - "9001:9001"
+    environment:
+      MONGODB_URL: "hobb-db:27017"
+
+###############################################################################
+# Grafana - The open platform for beautiful analytics and monitoring
+###############################################################################
+  grafana:
+    image: registry.io.bb.com.br:3389/hobb/grafana:latest
+    volumes:
+      - grafana:/data
+    ports:
+      - "3000:3000"
+
+###############################################################################
+# Mocha - Integration Test
+###############################################################################
+
+
+################################################################################
+# Portainer for Docker monitoring
+################################################################################
+
+  portainer:
+    image: portainer/portainer
+    ports:
+      - "9000:9000"
+    command: -H unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+
+# Networks config
+networks:
+  default:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.5.0/24
+
+# Volume default docker
+# remove all: docker volume rm $(docker volume ls -q)
+volumes:
+  mongo_data:
+  grafana:
+  prometheus:
+  portainer_data:
