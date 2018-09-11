@@ -24,7 +24,7 @@ services:
     ports:
       - '3443:3443'
     environment:
-      - MONGO_URL=mongodb://hobb_db:27017/hobb
+      - MONGO_URL=mongodb://hobb-db:27017/hobb
       - MONGO_USER=admin
       - MONGO_PWD=admin
       - API_PORT=3443
@@ -38,6 +38,7 @@ services:
     image: mongo-express:0.45.0
     environment:
       ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_SERVER: hobb-db
       ME_CONFIG_MONGODB_ADMINUSERNAME: admin
       ME_CONFIG_MONGODB_ADMINPASSWORD: admin
     ports:
@@ -73,7 +74,7 @@ services:
     ports:
       - "9001:9001"
     environment:
-      MONGODB_URL: "hobb_db:27017"
+      MONGODB_URL: "hobb-db:27017"
 
 ###############################################################################
 # Grafana - The open platform for beautiful analytics and monitoring
