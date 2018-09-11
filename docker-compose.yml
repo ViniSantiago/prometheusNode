@@ -28,8 +28,8 @@ services:
       - MONGO_USER=admin
       - MONGO_PWD=admin
       - API_PORT=3443
-      - KERNEL_AUTHORIZATION=nUgVsgTqYjvNd6EV6Ftmq7ZxYaEkM8Cl
-      - KERNEL_ACCOUNT=https://10.254.0.118:8081/kernel/api/v0/accounts
+      - KERNEL_AUTHORIZATION=7egQpg76YVH1YSkdUpzJL8MIbafZ2DJQ6AMFHV6n
+      - KERNEL_ACCOUNT=https://api.kernel.io.bb.com.br/v0/accounts
 
 ###############################################################################
 # mongo-express - Web-based MongoDB admin interface
@@ -101,8 +101,10 @@ services:
       - MONGO_URL=mongodb://hobb_db:27017/test  
       - MONGO_PWD=admin
       - MONGO_USER=admin  
-      - KERNEL_AUTHORIZATION=nUgVsgTqYjvNd6EV6Ftmq7ZxYaEkM8Cl
-      - KERNEL_ACCOUNT=https://10.254.0.118:8081/kernel/api/v0/accounts
+    #  - KERNEL_AUTHORIZATION=nUgVsgTqYjvNd6EV6Ftmq7ZxYaEkM8Cl
+    #  - KERNEL_ACCOUNT=https://10.254.0.118:8081/kernel/api/v0/accounts
+      - KERNEL_AUTHORIZATION=7egQpg76YVH1YSkdUpzJL8MIbafZ2DJQ6AMFHV6n
+      - KERNEL_ACCOUNT=https://api.kernel.io.bb.com.br/v0/accounts
 
 ################################################################################
 # Portainer for Docker monitoring

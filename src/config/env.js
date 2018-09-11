@@ -13,6 +13,6 @@ export const Env = {
     },
     kernel: {
         authorization: process.env.KERNEL_AUTHORIZATION || 'nUgVsgTqYjvNd6EV6Ftmq7ZxYaEkM8Cl',
-        url_kernel_account: process.env.KERNEL_ACCOUNT || 'https://api.kernel.io.bb.com.br:8081/v0/accounts',
+        url_kernel_account: process.env.KERNEL_ACCOUNT || 'https://api.kernel.io.bb.com.br/v0/accounts',
     }
 };
