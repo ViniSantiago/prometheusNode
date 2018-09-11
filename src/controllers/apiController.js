@@ -63,19 +63,16 @@ exports.sign_up_user = async function (req, res) {
             cpfcnpj: req.body.cpfcnpj,
             products: [req.body.products]
         });
-        return res.json({
-            success: {
-                data: user
-            }
-        });
+        res.json({ success: { data: user }});
     } catch (error) {
-        return res.status(403).json(error);
+        res.status(403).json(error);
     }
     PrometheusMetrics.requestCounter.inc({
         method: req.method,
         path: req.path,
         statusCode: res.statusCode
-    });
+    }); 
+    return res;
 };
 
 exports.get_me = function (req, res) {
