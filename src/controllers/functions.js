@@ -2,6 +2,9 @@ var Config = require("../config/env");
 var request = require("request");
 var exports = module.exports = {};
 
+var mongoose = require("mongoose");
+var User = mongoose.model("User");
+
 function registerKernel(_user) {
     var _data = {
       owner: _user.userid

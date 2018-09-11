@@ -49,43 +49,28 @@ exports.list_all_users = function (req, res) {
     });
 };
 
-exports.sign_up_user = function (req, res) {
+exports.sign_up_user = async function (req, res) {
     console.log("Sign_up Body\n" + Util.inspect(req.body, false, null));
-    validation.newUserValidation(req.body).then(
-        function (resultValidation) {
-            validation.registerKernel(req.body).then(
-                function (resultKernel) {
-                    req.body.userid = uuid.v4();
-                    req.body.kernelid = resultKernel;
-                    var new_user = new User(req.body);
-                    new_user.save(function (err, user) {
-                        if (err) {
-                            return res.status(403).json({
-                                error: {
-                                    code: 100,
-                                    message: err
-                                }
-                            });
-                        } else {
-                            return res.json({
-                                success: {
-                                    data: user
-                                }
-                            });
-                        }
-                    });
-                },
-                function (err) {
-                    // Erro registrando ID o Kernel
-                    return res.status(403).json(err);
-                }
-            );
-        },
-        function (err) {
-            // Erro na validacao dos Dados
-            return res.status(403).json(err);
-        }
-    );
+    try {
+        await validation.newUserValidation(req.body);
+        let resultKernel = await validation.registerKernel(req.body);
+        let user = await User.create({
+            userid: uuid.v4(),
+            kernelid: resultKernel,
+            name: req.body.name,
+            email: req.body.email,
+            cellphone: req.body.cellphone,
+            cpfcnpj: req.body.cpfcnpj,
+            products: [req.body.products]
+        });
+        return res.json({
+            success: {
+                data: user
+            }
+        });
+    } catch (error) {
+        return res.status(403).json(error);
+    }
     PrometheusMetrics.requestCounter.inc({
         method: req.method,
         path: req.path,
