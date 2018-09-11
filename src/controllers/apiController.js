@@ -18,7 +18,7 @@ const PrometheusMetrics = {
     })
 };
 
-exports.welcome = function(req, res) {
+exports.welcome = function (req, res) {
     PrometheusMetrics.requestCounter.inc({
         method: req.method,
         path: req.path,
@@ -29,8 +29,8 @@ exports.welcome = function(req, res) {
     });
 };
 
-exports.list_all_users = function(req, res) {
-    User.find({}, function(err, user) {
+exports.list_all_users = function (req, res) {
+    User.find({}, function (err, user) {
         if (err) {
             res.status(403).json({
                 error: {
@@ -52,16 +52,16 @@ exports.list_all_users = function(req, res) {
     });
 };
 
-exports.sign_up_user = function(req, res) {
+exports.sign_up_user = function (req, res) {
     console.log("Sign_up Body\n" + Util.inspect(req.body, false, null));
     newUserValidation(req.body).then(
-        function(resultValidation) {
+        function (resultValidation) {
             registerKernel(req.body).then(
-                function(resultKernel) {
+                function (resultKernel) {
                     req.body.userid = uuid.v4();
                     req.body.kernelid = resultKernel;
                     var new_user = new User(req.body);
-                    new_user.save(function(err, user) {
+                    new_user.save(function (err, user) {
                         if (err) {
                             return res.status(403).json({
                                 error: {
@@ -78,13 +78,13 @@ exports.sign_up_user = function(req, res) {
                         }
                     });
                 },
-                function(err) {
+                function (err) {
                     // Erro registrando ID o Kernel
                     return res.status(403).json(err);
                 }
             );
         },
-        function(err) {
+        function (err) {
             // Erro na validacao dos Dados
             return res.status(403).json(err);
         }
@@ -96,10 +96,10 @@ exports.sign_up_user = function(req, res) {
     });
 };
 
-exports.get_me = function(req, res) {
+exports.get_me = function (req, res) {
     User.findOne({
         email: req.body.email
-    }, null, function(err, user) {
+    }, null, function (err, user) {
         if (err) {
             res.status(403).json({
                 error: {
@@ -131,7 +131,7 @@ exports.get_me = function(req, res) {
     });
 };
 
-exports.delete_user = function(req, res) {
+exports.delete_user = function (req, res) {
     User.findByIdAndRemove(req.body._id, (err, result) => {
         if (err) {
             res.status(403).json({
@@ -158,10 +158,10 @@ exports.delete_user = function(req, res) {
 
 function newUserValidation(_user) {
     /* Verifica existencia de mesmo email para outro usuario */
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         User.findOne({
             email: _user.email
-        }, null, function(err, user) {
+        }, null, function (err, user) {
             if (err) {
                 reject({
                     error: {
@@ -194,7 +194,7 @@ function registerKernel(_user) {
         authorization: Config.Env.kernel.authorization
     };
 
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         request.post({
                 headers: _header,
                 url: Config.Env.kernel.url_kernel_account,
@@ -203,7 +203,7 @@ function registerKernel(_user) {
                 timeout: 1500,
                 json: true
             },
-            function(erro, resp, body) {
+            function (erro, resp, body) {
                 if (erro) {
                     console.log("Error reaching Kernel: " + erro);
                     reject({
@@ -222,8 +222,8 @@ function registerKernel(_user) {
     });
 }
 
-exports.list_product = function(req, res) {
-    Product.find({}, function(err, product) {
+exports.list_product = function (req, res) {
+    Product.find({}, function (err, product) {
         if (err) {
             res.status(403).json({
                 error: {
@@ -245,7 +245,7 @@ exports.list_product = function(req, res) {
     });
 };
 
-exports.create_product = async function(req, res) {
+exports.create_product = async function (req, res) {
     var resultKernel = await registerKernel(req.body);
     await Product.create({
             kernelid: resultKernel,
@@ -255,7 +255,7 @@ exports.create_product = async function(req, res) {
             transaction: [],
             tags: req.body.tags
         },
-        function(error, product) {
+        function (error, product) {
             if (error) {
                 res.status(403).json({
                     error: {
