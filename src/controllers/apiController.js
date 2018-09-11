@@ -74,24 +74,22 @@ exports.sign_up_user = async function (req, res) {
     }); 
     return res;
 };
-
-exports.get_me = function (req, res) {
-    User.findOne({
-        email: req.body.email
-    }, null, function (err, user) {
-        if (err) {
-            res.status(403).json({
-                error: {
-                    code: 1,
-                    message: err
-                }
-            });
-        } else {
-            if (!user) {
+exports.get_me = async function (req, res) {
+    await User.findOne({
+            email: req.body.email
+        }, (error, user) => {
+            if (error) {
+                res.status(403).json({
+                    error: {
+                        code: 1,
+                        message: error
+                    }
+                });
+            } else if (!user) {
                 res.status(403).json({
                     error: {
                         code: 100,
-                        message: 'User not found'
+                        message: "User not found"
                     }
                 });
             } else {
@@ -102,12 +100,13 @@ exports.get_me = function (req, res) {
                 });
             }
         }
-    });
+    );
     PrometheusMetrics.requestCounter.inc({
         method: req.method,
         path: req.path,
         statusCode: res.statusCode
     });
+    return res;
 };
 
 exports.delete_user = function (req, res) {
