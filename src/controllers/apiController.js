@@ -1,5 +1,5 @@
 "use strict";
-require('./functions')
+var validation = require('./functions.js')
 var Util = require("util");
 var uuid = require("node-uuid");
 var mongoose = require("mongoose");
@@ -51,9 +51,9 @@ exports.list_all_users = function (req, res) {
 
 exports.sign_up_user = function (req, res) {
     console.log("Sign_up Body\n" + Util.inspect(req.body, false, null));
-    newUserValidation(req.body).then(
+    validation.newUserValidation(req.body).then(
         function (resultValidation) {
-            registerKernel(req.body).then(
+            validation.registerKernel(req.body).then(
                 function (resultKernel) {
                     req.body.userid = uuid.v4();
                     req.body.kernelid = resultKernel;
@@ -179,7 +179,7 @@ exports.list_product = function (req, res) {
 };
 
 exports.create_product = async function (req, res) {
-    var resultKernel = await registerKernel(req.body);
+    var resultKernel = await validation.registerKernel(req.body);
     await Product.create({
             kernelid: resultKernel,
             description: req.body.description,

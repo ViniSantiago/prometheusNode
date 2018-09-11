@@ -1,5 +1,6 @@
 var Config = require("../config/env");
 var request = require("request");
+var exports = module.exports = {};
 
 function registerKernel(_user) {
     var _data = {
