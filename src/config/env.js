@@ -1,4 +1,4 @@
-exports.Env = {
+export const Env = {
     app: {
         name: process.env.npm_package_name,
         version: process.env.npm_package_version,
