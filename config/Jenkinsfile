@@ -19,8 +19,8 @@ def buildChart (chartname, imagetag) {
     mv helm-template ${chartname}
     mv k8s-values.yaml ${chartname}/values.yaml
     sed -i 's|image-name-ci|${imagetag}|g' ${chartname}/values.yaml
-    mv Chart.yaml ${chartname}/Chart.yaml
-    mv requirements.yaml ${chartname}/requirements.yaml
+    mv config/Chart.yaml ${chartname}/Chart.yaml
+    mv config/requirements.yaml ${chartname}/requirements.yaml
     cd ${chartname}
     helm dependency update
     helm package .

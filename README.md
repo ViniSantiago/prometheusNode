@@ -1,12 +1,7 @@
-# HOBB API - Version 0
-#--------------------
+# HOBB API - Version 0.0.1
 
 # Run:
 $ docker-compose up -d --build
-
-# Appication URL: 
-http://localhost:3443
-
 
 # API: 
    *  Headers: Content-Type=application/json
