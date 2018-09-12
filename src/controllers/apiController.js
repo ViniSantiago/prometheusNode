@@ -52,11 +52,8 @@ exports.list_all_users = function (req, res) {
 exports.sign_up_user = async function (req, res) {
     console.log("Sign_up Body\n" + Util.inspect(req.body, false, null));
     try {
-        console.log("Starting Validation");
         await validation.newUserValidation(req.body);
-        console.log("Calling Kernel");
         let resultKernel = await validation.registerKernel(req.body);
-        console.log("Creating user");
         let user = await User.create({
             userid: uuid.v4(),
             kernelid: resultKernel,
@@ -67,7 +64,6 @@ exports.sign_up_user = async function (req, res) {
             cpfcnpj: req.body.cpfcnpj,
             products: [req.body.products]
         });
-        console.log("User created. " + user);
         res.json({
             success: {
                 data: user

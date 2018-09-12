@@ -45,7 +45,6 @@ function registerKernel(_user) {
 }
 
 function newUserValidation(req) {
-    /* Verifica existencia de mesmo email para outro usuario */
     return new Promise(function (resolve, reject) {
         if (!req.email) {
             reject({
@@ -79,6 +78,7 @@ function newUserValidation(req) {
                 }
             })
         };
+        /* Verifica existencia de mesmo email para outro usuario */
         User.findOne({
             email: req.email
         }, null, function (err, user) {
