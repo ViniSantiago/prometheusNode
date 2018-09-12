@@ -1,0 +1,190 @@
+/**
+ *  Create (if needed) the kubernetes namespace
+ */
+def createNamespace (namespace) {
+    echo "Creating namespace ${namespace} if needed"
+    sh "[ ! -z \"\$(kubectl get ns ${namespace} -o name 2>/dev/null)\" ] || kubectl create ns ${namespace}"
+}
+
+/**
+ * Deploy a chart into repo
+ */
+def buildChart (chartname, imagetag) {
+  //git branch: 'master', credentialsId: 'jenkins-token', url: 'https://gitlab.io.bb.com.br/infra/helm-template.git'
+  sh """
+    git clone https://jenkins:tL5iB7hBssc-Vgwyv1Wf@gitlab.io.bb.com.br/infra/helm-template.git
+    helm repo add stable http://charts.apps.io.bb.com.br
+    helm repo add incubator http://charts-incubator.apps.io.bb.com.br
+    helm repo update
+    mv helm-template ${chartname}
+    mv k8s-values.yaml ${chartname}/values.yaml
+    sed -i 's|image-name-ci|${imagetag}|g' ${chartname}/values.yaml
+    mv Chart.yaml ${chartname}/Chart.yaml
+    mv requirements.yaml ${chartname}/requirements.yaml
+    cd ${chartname}
+    helm dependency update
+    helm package .
+    ls -l
+    curl --data-binary \"@\"\$(ls | grep ${chartname})\"\" http://charts.apps.io.bb.com.br/api/charts
+  """
+}
+
+/**
+ * Deploy a chart into kubernetes
+ */
+def deploymentChart (chartname) {
+    echo "Deployment chart ${chartname} if needed"
+    sh """
+        helm repo update
+        if [ \"\$(helm ls | grep ${chartname} | wc -l)\" -eq 0 ];
+        then
+          helm install --name=${chartname} \
+                       --namespace=${chartname} \
+                       --set fullnameOverride=${chartname} \
+                       stable/${chartname};
+        else
+          helm search
+          helm repo update
+          helm search
+          helm upgrade ${chartname} \
+                        --namespace=${chartname} \
+                        stable/${chartname};
+        fi
+      """
+}
+
+/**
+ * Build a docker image and push into repository
+ */
+def buildImageDocker(image, imagetag){
+  echo "Build image: ${imagetag}"
+  sh """
+    docker build . -t ${image}
+    docker tag ${image} ${imagetag}
+    docker push ${imagetag}
+  """
+}
+
+
+pipeline {
+
+  options {
+    // Build auto timeout
+    timeout(time: 60, unit: 'MINUTES')
+  }
+
+  environment {
+    PROJECT_NAME = "hobb-api"
+    VERSION = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+    IMAGE = "registry.io.bb.com.br:3389/${PROJECT_NAME}"
+    IMAGE_TAG = "${IMAGE}:${VERSION}"
+    NAMESPACE = "hobb-api"
+    HELM_TEMPLATE = "https://gitlab.io.bb.com.br/infra/helm-template.git"
+    DEPLOYMENT_STATUS = ""
+  }
+
+  agent {
+    kubernetes {
+      label 'hobb-api-k8s'
+      defaultContainer 'angular-cli'
+      yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    component: ci
+spec:
+  serviceAccountName: jenkins-service-account
+  containers:
+  - name: angular-cli
+    image: teracy/angular-cli:1.5.0
+    command:
+    - cat
+    tty: true
+  - name: node
+    image: node:10.5-alpine
+    command:
+    - cat
+    tty: true
+  - name: helm
+    image: registry.io.bb.com.br:3389/helm
+    command:
+    - cat
+    tty: true
+  - name: docker
+    image: docker:18.06.0-ce
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+    - name: dockersock
+      mountPath: "/var/run/docker.sock"
+  volumes:
+  - name: dockersock
+    hostPath:
+      path: /var/run/docker.sock
+"""
+    }
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        echo "version => ${VERSION}"
+      }
+    }
+
+    stage('Install dependencies') {
+      steps {
+        container('node') {
+          echo "Install npm dependencies"
+          sh 'npm config set registry https://atf.io.bb.com.br:30181/repository/npm/'
+          sh 'npm install'
+        }
+      }
+    }
+
+    stage('Test') {
+      steps {
+        echo 'Testing the code'
+      }
+    }
+    
+    stage('Namespace k8s') {
+      steps {
+        container('helm') {
+          echo "Creating or updating the namespace ${PROJECT_NAME}"
+          createNamespace ("${PROJECT_NAME}")
+        }
+      }
+    }
+    
+    stage('Build image') {
+      steps {
+        container('docker') {
+          buildImageDocker("${IMAGE}", "${IMAGE_TAG}")
+        }
+      }
+    }
+
+    stage('Build chart') {
+      steps {
+        echo "Build chart: ${PROJECT_NAME}"
+        container('helm') {
+          buildChart ("${PROJECT_NAME}", "${IMAGE_TAG}")
+        }
+      }
+    }
+
+    stage('Deploy chart') {
+
+      steps {
+        echo "Deploy chart: ${PROJECT_NAME}"
+        container('helm') {
+          deploymentChart ("${PROJECT_NAME}")
+        }
+      }
+    }
+
+  }
+}

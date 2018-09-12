@@ -1,0 +1,78 @@
+mongodb:
+  fullname: mongodb
+  persistence:
+    existingClaim: false
+  existingSecret: false
+  mongodbUsername: "admin"
+  mongodbPassword: "admin"
+  mongodbDatabase: "hobb"
+
+mongo-express:
+  security:
+    username: admin
+    password: admin
+  mongodb:
+    server: hobb-api-mongodb
+    admin_enable: false
+    username: "admin"
+    password: "admin"
+    database: "hobb"
+    port: 27017
+  ingressInterno:
+    hostname: mongo.hobb.io.bb.com.br
+    tls:
+    - secretName: hobb-io-tls
+      hosts:
+      - mongo.hobb.io.bb.com.br
+
+deployment:
+  replicaCount: 1
+  image: image-name-ci
+  imagePullPolicy: IfNotPresent
+  environments:
+  - name: MONGO_URL
+    value: "mongodb://hobb-api-mongodb:27017/hobb"
+  - name: API_PORT
+    value: "3443"
+  - name: MONGO_USER
+    value: admin
+  - name: MONGO_PWD
+    value: admin
+  - name: KERNEL_AUTHORIZATION
+    value: nUgVsgTqYjvNd6EV6Ftmq7ZxYaEkM8Cl
+  - name: KERNEL_ACCOUNT
+    value: https://api.kernel.io.bb.com.br/kernel/api/v0/accounts
+  ports:
+    - name: http
+      containerPort: 3443
+
+persistenceVolume:
+  enable: false
+  persistentVolumeClaim:
+  storageClass:
+  storageSize:
+
+service:
+  type: ClusterIP
+  ports:
+  - name: hobb-api-http
+    port: 80
+    targetPort: 3443
+
+ingressInterno:
+  enable: true
+  hostname: api.hobb.io.bb.com.br
+  servicePort: 80
+  tls:
+  - secretName: hobb-io-tls
+    hosts:
+    - api.hobb.io.bb.com.br
+
+ingressExterno:
+  enable: true
+  hostname: api.hobb.io.bb.com.br
+  servicePort: 80
+  tls:
+  - secretName: hobb-io-tls
+    hosts:
+    - api.hobb.io.bb.com.br

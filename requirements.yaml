@@ -1,0 +1,6 @@
+dependencies:
+  - name: mongodb
+    repository: http://charts-incubator.apps.io.bb.com.br/
+  - name: mongo-express
+    version: 0.1.1
+    repository: http://charts-incubator.apps.io.bb.com.br/
