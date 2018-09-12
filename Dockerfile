@@ -15,4 +15,4 @@ ADD /src/ /var/app/
 
 EXPOSE 3443
 
-RUN npm start
+CMD ["npm", "start"]
