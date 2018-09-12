@@ -43,21 +43,17 @@ var UserSchema = new Schema({
   kernelid: String,
   name: {
     type: String,
-    required: 'Name must be supplied',
+    required: true,
     trim: true
   },
   email: {
     type: String,
     index: true,
-    required: "email must be supplied",
+    required: true,
     unique: true,
     trim: true
   },
   password: {
-    type: String,
-    required: true
-  },
-  passwordConf: {
     type: String,
     required: true
   },
@@ -67,16 +63,16 @@ var UserSchema = new Schema({
 });
 
 // Hashing password before save it into database
-UserSchema.pre('save', (next) => {
+UserSchema.pre('save', function (next) {
   var user = this;
-  bcrypt.hash(user.password, 10, (err, hash) => {
+  bcrypt.hash(user.password, 10, function (err, hash) {
     if (err) {
       return next(err);
     }
     user.password = hash;
     next();
   })
-})
+});
 
 module.exports = mongoose.model('User', UserSchema);
 module.exports = mongoose.model('Product', ProductsSchema);

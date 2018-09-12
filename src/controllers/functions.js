@@ -94,7 +94,7 @@ function newUserValidation(req) {
                 reject({
                     error: {
                         code: 1,
-                        message: "Email '" + _user.email + "' already been taken by someone else",
+                        message: "Email '" + req.email + "' already been taken by someone else",
                         userid: user.userid
                     }
                 });
