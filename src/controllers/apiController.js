@@ -63,7 +63,11 @@ exports.sign_up_user = async function (req, res) {
             cpfcnpj: req.body.cpfcnpj,
             products: [req.body.products]
         });
-        res.json({ success: { data: user }});
+        res.json({
+            success: {
+                data: user
+            }
+        });
     } catch (error) {
         res.status(403).json(error);
     }
@@ -71,36 +75,36 @@ exports.sign_up_user = async function (req, res) {
         method: req.method,
         path: req.path,
         statusCode: res.statusCode
-    }); 
+    });
     return res;
 };
+
 exports.get_me = async function (req, res) {
     await User.findOne({
-            email: req.body.email
-        }, (error, user) => {
-            if (error) {
-                res.status(403).json({
-                    error: {
-                        code: 1,
-                        message: error
-                    }
-                });
-            } else if (!user) {
-                res.status(403).json({
-                    error: {
-                        code: 100,
-                        message: "User not found"
-                    }
-                });
-            } else {
-                res.json({
-                    success: {
-                        data: user
-                    }
-                });
-            }
+        email: req.body.email
+    }, (error, user) => {
+        if (error) {
+            res.status(403).json({
+                error: {
+                    code: 1,
+                    message: error
+                }
+            });
+        } else if (!user) {
+            res.status(403).json({
+                error: {
+                    code: 100,
+                    message: "User not found"
+                }
+            });
+        } else {
+            res.json({
+                success: {
+                    data: user
+                }
+            });
         }
-    );
+    });
     PrometheusMetrics.requestCounter.inc({
         method: req.method,
         path: req.path,
