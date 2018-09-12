@@ -1,3 +1,6 @@
 /node_modules/*
 /grafana/data/*
 npm-debug.log
+coverage
+.vscode
+.nyc_output
