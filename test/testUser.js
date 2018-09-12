@@ -207,9 +207,6 @@ describe.only('app', () => {
                 })
         });
 
-<<<<<<< HEAD
-        it('register a invalid user', function(done) { //envia campo email em branco para retornar erro
-=======
         it('register a invalid user no pass', function(done) { //envia json sem campo "pass" para retornar erro
    
             request.put(URL_API + VERSION + PATH_USER + PATH_SIGNUP)
@@ -229,7 +226,6 @@ describe.only('app', () => {
         });
 
         it('register a invalid user no name', function(done) { //envia json sem campo name para retornar erro
->>>>>>> 32f5fd84ff33899ac7f3d166ebcf90e67a9b6a04
             // Não está tratando esse erro
             request.put(URL_API + VERSION + PATH_USER + PATH_SIGNUP)
                 .send(JSON.stringify(invalidUser, ['email', 'password', 'passwordConf']))
@@ -237,17 +233,10 @@ describe.only('app', () => {
                 .expect(403)
                 .end(function(err, res) {
 
-<<<<<<< HEAD
-                    assert.property(res.body, "errors")
-                    assert.property(res.body.errors, "message")
-
-                    assert.include(res.body.errors.message, "email must be supplied")
-=======
                     assert.property(res.body, "error")
                     assert.property(res.body.error, "message")
                    
                     assert.include(res.body.error.message, "Name must be supplied")
->>>>>>> 32f5fd84ff33899ac7f3d166ebcf90e67a9b6a04
 
                     if (err) return done(err);
                     done();
