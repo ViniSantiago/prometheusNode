@@ -74,6 +74,15 @@ UserSchema.pre('save', function (next) {
   })
 });
 
+UserSchema.methods.comparePassword = function (passw, cb) {
+  bcrypt.compare(passw, this.password, function(err, isMatch) {
+    if (err) {
+      return cb(err, false);
+    }
+    return cb(null, isMatch);
+  });
+};
+
 module.exports = mongoose.model('User', UserSchema);
 module.exports = mongoose.model('Product', ProductsSchema);
 module.exports = mongoose.model('Transaction', TransactionsSchema);
