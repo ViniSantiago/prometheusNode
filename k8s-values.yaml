@@ -36,9 +36,9 @@ deployment:
   - name: API_PORT
     value: "3443"
   - name: MONGO_USER
-    value: admin
+    value: "admin"
   - name: MONGO_PWD
-    value: admin
+    value: "admin"
   - name: KERNEL_AUTHORIZATION
     value: nUgVsgTqYjvNd6EV6Ftmq7ZxYaEkM8Cl
   - name: KERNEL_ACCOUNT

@@ -23,14 +23,10 @@ console.log('KERNEL_ACCOUNT . . .: ' + Config.Env.kernel.url_kernel_account);
 console.log('');
 
 var mongo_option = {
-    auth: {
-        authdb: "admin",
-    },
     useNewUrlParser: true,
     pass: Config.Env.db.pwd,
     user: Config.Env.db.user,
 }
-
 
 mongoose.Promise = global.Promise;
 mongoose.connect(Config.Env.db.url, mongo_option, function(error) {
