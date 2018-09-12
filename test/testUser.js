@@ -173,14 +173,18 @@ describe.only('app', () => {
                 })
         });
 
-        it('register a invalid user', function(done) { //envia campo email em branco para retornar erro
+        it.only('register a invalid user', function(done) { //envia campo email em branco para retornar erro
             // Não está tratando esse erro
             request.put(URL_API + VERSION + PATH_USER + PATH_SIGNUP)
                 .send(JSON.stringify(invalidUser))
                 .set('Content-type', 'application/json')
                 .expect(403)
                 .end(function(err, res) {
-                    assert.property(res.body, "error")
+
+                    assert.property(res.body, "errors")
+                    assert.property(res.body.errors, "message")
+                   
+                    assert.include(res.body.errors.message, "email must be supplied")
 
                     if (err) return done(err);
                     done();
