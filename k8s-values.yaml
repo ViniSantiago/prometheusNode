@@ -2,6 +2,7 @@ mongodb:
   fullname: mongodb
   persistence:
     existingClaim: false
+    storageClass: gluster-heketi
   existingSecret: false
   mongodbUsername: "admin"
   mongodbPassword: "admin"
