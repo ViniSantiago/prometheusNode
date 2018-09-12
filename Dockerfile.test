@@ -1,12 +1,13 @@
 FROM api-service:latest
+
 WORKDIR /var/app
 ADD package.json /var/app/
 
-ENV NODE_ENV dev
+ENV NODE_ENV=development
+
+RUN npm install
 
 ADD test test
 
-RUN npm update 
-RUN npm install
 ENTRYPOINT ["npm", "run"]
 CMD ["test"]

@@ -24,12 +24,13 @@ services:
       context: .
       dockerfile: Dockerfile.debug
     image: api-service:latest
-    command: nodemon -L --inspect=0.0.0.0:5858 api.js
+    command: nodemon --inspect=0.0.0.0:5858 /var/app/api.js
     ports:
       - '3443:3443'
+      
     volumes:
       - ./src/:/var/app
-      - /var/app/node_modules
+      
     environment:
       - MONGO_URL=mongodb://hobb-db:27017/hobb
       - MONGO_USER=admin
@@ -55,44 +56,9 @@ services:
 ###############################################################################
 # Swagger UI - API Development Tools
 ###############################################################################
-  swagger:
-    image: registry.io.bb.com.br:3389/hobb/swagger:latest
-    ports:
-      - "8009:8080"
-    environment:
-      SWAGGER_JSON: /doc/swagger.json
 
-###############################################################################
-# Prometheus - Monitoring system & time series database
-###############################################################################
-  prometheus-service:
-    image: registry.io.bb.com.br:3389/hobb/prometheus:latest
-    volumes:
-      - prometheus:/prometheus
-    ports:
-      - '9090:9090'
 
-  node-exporter-service:
-    image: prom/node-exporter:latest
-    ports:
-      - '9100:9100'
 
-  mongodb-exporter-service:
-    image: targetprocess/mongodb_exporter
-    ports:
-      - "9001:9001"
-    environment:
-      MONGODB_URL: "hobb-db:27017"
-
-###############################################################################
-# Grafana - The open platform for beautiful analytics and monitoring
-###############################################################################
-  grafana:
-    image: registry.io.bb.com.br:3389/hobb/grafana:latest
-    volumes:
-      - grafana:/data
-    ports:
-      - "3000:3000"
 
 ###############################################################################
 # Mocha - Integration Test
@@ -110,7 +76,7 @@ services:
     command: -H unix:///var/run/docker.sock
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
+- portainer_data:/data
 
 # Networks config
 networks:

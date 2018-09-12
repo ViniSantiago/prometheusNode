@@ -1,9 +1,21 @@
 FROM node:10.5-alpine
-WORKDIR /var/app
-ADD package.json /var/app/
+
+WORKDIR /data/
+
+ENV NODE_ENV=development
+
+COPY package.json /data/
+
+#ENV HTTP_PROXY=http://10.8.5.222:3128
+#ENV HTTPS_PROXY=http://10.8.5.222:3128
+
+RUN npm install && npm install -g nodemon
+
+ENV NODE_PATH=/data/node_modules
+
 ADD /src/ /var/app/
-ENV HTTP_PROXY=http://10.8.5.222:3128
-ENV HTTPS_PROXY=http://10.8.5.222:3128
-RUN npm install
+
+WORKDIR /var/app
 EXPOSE 3443
-CMD ["node", "api.js"]
+
+CMD npm run start
