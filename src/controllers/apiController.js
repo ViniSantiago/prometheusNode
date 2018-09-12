@@ -15,7 +15,7 @@ const PrometheusMetrics = {
     })
 };
 
-exports.welcome = function (req, res) {
+exports.welcome = function(req, res) {
     PrometheusMetrics.requestCounter.inc({
         method: req.method,
         path: req.path,
@@ -26,8 +26,8 @@ exports.welcome = function (req, res) {
     });
 };
 
-exports.list_all_users = function (req, res) {
-    User.find({}, function (err, user) {
+exports.list_all_users = function(req, res) {
+    User.find({}, function(err, user) {
         if (err) {
             res.status(403).json({
                 error: {
@@ -49,7 +49,7 @@ exports.list_all_users = function (req, res) {
     });
 };
 
-exports.sign_up_user = async function (req, res) {
+exports.sign_up_user = async function(req, res) {
     console.log("Sign_up Body\n" + Util.inspect(req.body, false, null));
     try {
         await validation.newUserValidation(req.body);
@@ -80,7 +80,7 @@ exports.sign_up_user = async function (req, res) {
     return res;
 };
 
-exports.get_me = async function (req, res) {
+exports.get_me = async function(req, res) {
     await User.findOne({
         email: req.body.email
     }, (error, user) => {
@@ -114,7 +114,7 @@ exports.get_me = async function (req, res) {
     return res;
 };
 
-exports.delete_user = function (req, res) {
+exports.delete_user = function(req, res) {
     User.findByIdAndRemove(req.body._id, (err, result) => {
         if (err) {
             res.status(403).json({
@@ -139,10 +139,42 @@ exports.delete_user = function (req, res) {
     });
 };
 
+exports.user_product_list = async function(req, res) {
+    await User.findOne({
+        email: req.body.email
+    }, (error, user) => {
+        if (error) {
+            res.status(403).json({
+                error: {
+                    code: 1,
+                    message: error
+                }
+            });
+        } else if (!user) {
+            res.status(403).json({
+                error: {
+                    code: 100,
+                    message: "User not found"
+                }
+            });
+        } else {
+            res.json({
+                success: {
+                    data: user
+                }
+            });
+        }
+    });
+    PrometheusMetrics.requestCounter.inc({
+        method: req.method,
+        path: req.path,
+        statusCode: res.statusCode
+    });
+    return res;
+};
 
-
-exports.list_product = function (req, res) {
-    Product.find({}, function (err, product) {
+exports.list_product = function(req, res) {
+    Product.find({}, function(err, product) {
         if (err) {
             res.status(403).json({
                 error: {
@@ -164,7 +196,7 @@ exports.list_product = function (req, res) {
     });
 };
 
-exports.create_product = async function (req, res) {
+exports.create_product = async function(req, res) {
     var resultKernel = await validation.registerKernel(req.body);
     await Product.create({
             kernelid: resultKernel,
@@ -174,7 +206,7 @@ exports.create_product = async function (req, res) {
             transaction: [],
             tags: req.body.tags
         },
-        function (error, product) {
+        function(error, product) {
             if (error) {
                 res.status(403).json({
                     error: {
