@@ -48,6 +48,13 @@ var firstUser = {
     name: 'Primeiro User'
 }
 
+var firstUserWithPass = {
+    email: 'primeiro@teste.com',
+    name: 'Primeiro User',
+    password: 'Pass',
+    passwordConf: 'Pass',
+}
+
 var invalidUser = {
     email: "email@semnome.com"
 }
@@ -113,6 +120,26 @@ describe.only('app', () => {
 
     describe('PUT /signup', function() {
 
+
+        it.only('register an user with password', function(done) { //registra um usuário
+
+            request.put(URL_API + VERSION + PATH_USER + PATH_SIGNUP)
+                .set('Content-type', 'application/json')
+                .send(JSON.stringify(firstUserWithPass))
+                .expect(200)
+                .end(function(err, res) {
+
+                    assert.property(res.body, 'success')
+                    assert.property(res.body.success.data, '_id')
+                    assert.isNotNull(res.body.success.data._id) //verifica se campo "_id" não é null
+                    assert.isNotNull(res.body.success.data.userid) //verifica se campo "userid" não é null
+                    assert.equal(res.body.success.data.name, firstUserWithPass.name)
+
+                    if (err) return done(err);
+                    done();
+                })
+        })
+
         it('register an user', function(done) { //registra um usuário
 
             request.put(URL_API + VERSION + PATH_USER + PATH_SIGNUP)
@@ -173,7 +200,7 @@ describe.only('app', () => {
                 })
         });
 
-        it.only('register a invalid user', function(done) { //envia campo email em branco para retornar erro
+        it('register a invalid user', function(done) { //envia campo email em branco para retornar erro
             // Não está tratando esse erro
             request.put(URL_API + VERSION + PATH_USER + PATH_SIGNUP)
                 .send(JSON.stringify(invalidUser))
@@ -183,7 +210,7 @@ describe.only('app', () => {
 
                     assert.property(res.body, "errors")
                     assert.property(res.body.errors, "message")
-                   
+
                     assert.include(res.body.errors.message, "email must be supplied")
 
                     if (err) return done(err);
