@@ -138,7 +138,7 @@ spec:
       steps {
         container('node') {
           echo "Install npm dependencies"
-          sh 'npm config set registry https://atf.io.bb.com.br:30181/repository/npm/'
+          sh 'npm config set registry https://atf.io.bb.com.br/repository/npm/'
           sh 'npm install'
         }
       }
