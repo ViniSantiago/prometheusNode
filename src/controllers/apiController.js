@@ -60,7 +60,6 @@ exports.sign_up_user = async function(req, res) {
             name: req.body.name,
             email: req.body.email,
             password: req.body.password,
-            passwordConf: req.body.passwordConf,
             cellphone: req.body.cellphone,
             cpfcnpj: req.body.cpfcnpj,
             products: [req.body.products]
