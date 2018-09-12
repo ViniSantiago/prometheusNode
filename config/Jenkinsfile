@@ -17,7 +17,7 @@ def buildChart (chartname, imagetag) {
     helm repo add incubator http://charts-incubator.apps.io.bb.com.br
     helm repo update
     mv helm-template ${chartname}
-    mv k8s-values.yaml ${chartname}/values.yaml
+    mv config/k8s-values.yaml ${chartname}/values.yaml
     sed -i 's|image-name-ci|${imagetag}|g' ${chartname}/values.yaml
     mv config/Chart.yaml ${chartname}/Chart.yaml
     mv config/requirements.yaml ${chartname}/requirements.yaml
