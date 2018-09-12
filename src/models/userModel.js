@@ -1,6 +1,7 @@
 'use strict';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var bcrypt = require("bcryptjs");
 
 var TransactionsSchema = new Schema({
   id: {
@@ -64,6 +65,18 @@ var UserSchema = new Schema({
   cpfcnpj: Number,
   products: [ProductsSchema]
 });
+
+// Hashing password before save it into database
+UserSchema.pre('save', (next) => {
+  var user = this;
+  bcrypt.hash(user.password, 10, (err, hash) => {
+    if (err) {
+      return next(err);
+    }
+    user.password = hash;
+    next();
+  })
+})
 
 module.exports = mongoose.model('User', UserSchema);
 module.exports = mongoose.model('Product', ProductsSchema);
