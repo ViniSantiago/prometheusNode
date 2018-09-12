@@ -44,33 +44,65 @@ function registerKernel(_user) {
     });
 }
 
-function newUserValidation(_user) {
-  /* Verifica existencia de mesmo email para outro usuario */
-  return new Promise(function (resolve, reject) {
-      User.findOne({
-          email: _user.email
-      }, null, function (err, user) {
-          if (err) {
-              reject({
-                  error: {
-                      code: 200,
-                      message: "Error validating email - " + err
-                  }
-              });
-          }
-          if (user) {
-              reject({
-                  error: {
-                      code: 1,
-                      message: "Email '" + _user.email + "' already been taken by someone else",
-                      userid: user.userid
-                  }
-              });
-          } else {
-              resolve();
-          }
-      });
-  });
+function newUserValidation(req) {
+    /* Verifica existencia de mesmo email para outro usuario */
+    return new Promise(function (resolve, reject) {
+        if (!req.email) {
+            reject({
+                error: {
+                    code: 100,
+                    message: "Email must be supplied"
+                }
+            });
+        }
+        if (!req.name) {
+            reject({
+                error: {
+                    code: 101,
+                    message: "Name must be supplied"
+                }
+            });
+        }
+        if (!req.password) {
+            reject({
+                error: {
+                    code: 102,
+                    message: "Password must be supplied"
+                }
+            });
+        }
+        if (req.password !== req.passwordConf) {
+            reject({
+                error: {
+                    code: 103,
+                    message: "Passwords do not match"
+                }
+            })
+        };
+        User.findOne({
+            email: req.email
+        }, null, function (err, user) {
+            if (err) {
+                reject({
+                    error: {
+                        code: 200,
+                        message: "Error validating email - " + err
+                    }
+                });
+            }
+            if (user) {
+                reject({
+                    error: {
+                        code: 1,
+                        message: "Email '" + _user.email + "' already been taken by someone else",
+                        userid: user.userid
+                    }
+                });
+            } else {
+                resolve();
+            }
+        });
+    });
 }
 
 module.exports = { registerKernel, newUserValidation };
