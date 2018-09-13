@@ -2,8 +2,8 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  namespace: conta
-  name: mongodb-exporter-ingress-http
+  namespace: hobb-api
+  name: grafana-ingress-http
   annotations:
     kubernetes.io/ingress.class: "nginx-interno"
     nginx.ingress.kubernetes.io/proxy-connect-timeout: "30"
@@ -11,13 +11,13 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-send-timeout: "1800"
 spec:
   rules:
-  - host: conta.io.bb.com.br
+  - host: grafana.hobb.io.bb.com.br
     http:
       paths:
       - backend:
-          serviceName: mongodb-exporter-service
-          servicePort: 9001
+          serviceName: grafana-service
+          servicePort: 80
   tls:
-  - hosts:
-    - api.conta.io.bb.com.br
-    secretName: conta-io-tls
+  - secretName: hobb-io-tls
+    hosts:
+    - grafana.hobb.io.bb.com.br

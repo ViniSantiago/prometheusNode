@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: grafana
-  namespace: conta
+  name: prometheus
+  namespace: hobb-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: grafana
+      app: prometheus
   template:
     metadata:
       labels:
-        app: grafana
+        app: prometheus
     spec:
       containers:
-      - name: grafana-container
-        image: registry.io.bb.com.br:3389/hobb/grafana:0.0.1
+      - name: prometheus-container
+        image: registry.io.bb.com.br:3389/hobb/prometheus:latest
         ports:
-        - containerPort: 3000
+        - containerPort: 9090
           name: service
         volumeMounts:
           - name: data
-            mountPath: /data
+            mountPath: /prometheus
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: grafana-pvc
+          claimName: prometheus-pvc

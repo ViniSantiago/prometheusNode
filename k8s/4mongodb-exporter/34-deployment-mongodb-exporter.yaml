@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mongodb-exporter
-  namespace: conta
+  namespace: hobb-api
 spec:
   replicas: 1
   selector:
@@ -21,4 +21,4 @@ spec:
           name: service
         env:
         - name: MONGODB_URL
-          value: "mongodb://mongodb-service:27017/conta"          
+          value: "mongodb://admin:admin@hobb-api-mongodb:27017"          

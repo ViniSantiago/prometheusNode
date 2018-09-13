@@ -1,15 +1,8 @@
 #                                    Grafana 
 #                                    -------
 
-## Criando o namespace
-#kubectl create -f 10-namespace.yaml
-
-## Criando a secret de acesso o registry
-# kubectl create secret docker-registry registrysecretkeynhhb --namespace=hobb --docker-username=drachenfutter --docker-password=
-
 ## Criando volumes
 kubectl create -f 16-persistent-volume-claim.yaml
-
 
 ## Criando o service
 kubectl create -f 21-service-grafana.yaml
@@ -18,4 +11,4 @@ kubectl create -f 21-service-grafana.yaml
 kubectl create -f 31-deployment-grafana.yaml
 
 ## Criando o ingress
-kubectl create -f 41-ingress-interno.yaml
+kubectl create -f 41-ingress-interno-grafana.yaml

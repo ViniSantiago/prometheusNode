@@ -22,7 +22,8 @@ exports.welcome = function(req, res) {
         statusCode: res.statusCode
     });
     return res.json({
-        hobb: "Projeto HOBB - Versão Inicial"
+        hobb: "Projeto HOBB - Versão Inicial",
+        version: "0.0.1"
     });
 };
 

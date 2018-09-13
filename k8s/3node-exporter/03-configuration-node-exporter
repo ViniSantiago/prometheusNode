@@ -7,6 +7,3 @@ kubectl create -f 23-service-node-exporter.yaml
 ## Criando o deployment
 kubectl create -f 33-deployment-node-exporter.yaml
 
-## Criando o ingress
-## - não é necessário executar, pois não precisa expor
-#kubectl create -f 43-ingress-interno-node-exporter.yaml
