@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: node-exporter
-  namespace: conta
+  namespace: hobb-api
 spec:
   replicas: 1
   selector:

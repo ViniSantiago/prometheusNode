@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prometheus
-  namespace: conta
+  namespace: hobb-api
 spec:
   replicas: 1
   selector:
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: prometheus-container
-        image: registry.io.bb.com.br:3389/hobb/prometheus:lastest
+        image: registry.io.bb.com.br:3389/hobb/prometheus:latest
         ports:
         - containerPort: 9090
           name: service

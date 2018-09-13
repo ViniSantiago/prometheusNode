@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: swagger
-  namespace: conta
+  namespace: hobb-api
 spec:
   replicas: 1
   selector:
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: swagger
-        image: registry.io.bb.com.br:3389/hobb/swagger:latest
+        image: registry.io.bb.com.br:3389/hobb/swagger:0.0.1
         ports:
         - containerPort: 8080
         env:

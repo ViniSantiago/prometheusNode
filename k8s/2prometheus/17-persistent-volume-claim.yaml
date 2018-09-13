@@ -2,7 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: prometheus-pvc
-  namespace: conta
+  namespace: hobb-api
   annotations:
     volume.beta.kubernetes.io/storage-class: gluster-heketi
 spec:
