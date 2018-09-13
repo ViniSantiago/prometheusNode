@@ -18,6 +18,8 @@ module.exports = function(app) {
     // User Paths
     const PATH_USER = "/user";
     const PATH_SIGNUP = "/signup";
+    const PATH_SIGNIN = "/signin";
+
     const PATH_ME = "/getme";
     const PATH_DELETE_BYID = "/deletebyid";
 
@@ -38,6 +40,10 @@ module.exports = function(app) {
     app
         .route(URL_API + VERSION + PATH_USER + PATH_SIGNUP)
         .put(apiController.sign_up_user);
+
+    app
+        .route(URL_API + VERSION + PATH_USER + PATH_SIGNIN)
+        .put(apiController.signin);
 
     app
         .route(URL_API + VERSION + PATH_USER + PATH_LIST_ALL)

@@ -113,6 +113,45 @@ exports.get_me = async function(req, res) {
     });
     return res;
 };
+exports.signin = function (req, res) {
+    User.findOne({
+        email: req.body.email
+    }, function (err, user) {
+        if (err) {
+            res.status(403).json({
+                error: {
+                    code: 100,
+                    message: err
+                }
+            })
+        } else {
+            user.comparePassword(req.body.password, function (err, isMatch) {
+                if (err) {
+                    res.status(403).json({
+                        error: {
+                            code: 101,
+                            message: err
+                        }
+                    })
+                } else if (isMatch == false) {
+                        res.status(403).json({
+                            error: {
+                                code: 1,
+                                message: "Invalid Password"
+                            }
+                        })
+                } else {
+                        res.json({
+                            success: {
+                                data: user
+                            }
+                        })
+
+                }
+            })
+        }
+    });
+};
 
 exports.delete_user = function(req, res) {
     User.findByIdAndRemove(req.body._id, (err, result) => {
