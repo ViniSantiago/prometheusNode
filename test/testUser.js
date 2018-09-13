@@ -53,8 +53,8 @@ var firstUser = {
 }
 
 var firstUserWithPass = {
-    email: 'primeiro@teste.com',
-    name: 'Primeiro User',
+    email: 'primeiropass@teste.com',
+    name: 'Primeiro User Pass',
     password: 'Pass',
     passwordConf: 'Pass',
 }
@@ -73,7 +73,7 @@ var delUser = {
 var invalidUrl = "/user/login";
 
 
-describe.only('app', () => {
+describe('app', () => {
 
     after(function() {
         //mongoose.connection.db.dropDatabase();
@@ -128,7 +128,7 @@ describe.only('app', () => {
     describe.only('PUT /signup', function() {
 
 
-        it.only('register an user with password', function(done) { //registra um usuário
+        it('register an user with password', function(done) { //registra um usuário
 
             request.put(URL_API + VERSION + PATH_USER + PATH_SIGNUP)
                 .set('Content-type', 'application/json')
@@ -138,8 +138,11 @@ describe.only('app', () => {
 
                     assert.property(res.body, 'success')
                     assert.property(res.body.success.data, '_id')
+                    assert.property(res.body.success.data, 'kernelid')
                     assert.isNotNull(res.body.success.data._id) //verifica se campo "_id" não é null
                     assert.isNotNull(res.body.success.data.userid) //verifica se campo "userid" não é null
+                    assert.isNotNull(res.body.success.data.kernelid) //verifica se campo "kernelid" não é null
+                    assert.notEqual(res.body.success.data.kernelid, "undefined") //verifica se campo "userid" não é null
                     assert.equal(res.body.success.data.name, firstUserWithPass.name)
 
                     if (err) return done(err);
@@ -180,10 +183,6 @@ describe.only('app', () => {
                     assert.property(res.body.error, 'code')
                     assert.equal(res.body.error.code, '1')
                     assert.property(res.body.error, 'message')
-                    assert.include(res.body.error.message, firstUser.email)
-                    assert.property(res.body.error, 'userid')
-                    assert.isNotNull(res.body.error.userid)
-
                     if (err) return done(err);
                     done();
                 });
@@ -273,8 +272,8 @@ describe.only('app', () => {
                 .expect(200)
                 .end(function(err, res) {
 
-                    assert.include(res.body.success.data[0], firstUser)
-                    assert.include(res.body.success.data[1], secondUser)
+                    assert.include(res.body.success.data[0], firstUser.name, firstUser.email)
+                    assert.include(res.body.success.data[1], secondUser.name, secondUser.email)
 
                     if (err) return done(err);
                     done();
