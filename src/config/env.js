@@ -12,7 +12,7 @@ exports.Env = {
         port: process.env.API_PORT || 3443,
     },
     kernel: {
-        authorization: process.env.KERNEL_AUTHORIZATION || '7egQpg76YVH1YSkdUpzJL8MIbafZ2DJQ6AMFHV6n',
+        authorization: process.env.KERNEL_AUTHORIZATION || '6R5HEf3RbetBZc7FQtqzktFnfm5OPu2jBwDrxwI7',
         url_kernel_account: process.env.KERNEL_ACCOUNT || 'https://api.kernel.io.bb.com.br/v0/accounts',
     }
 };

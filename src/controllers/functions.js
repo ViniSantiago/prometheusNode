@@ -31,7 +31,8 @@ function registerKernel(_user) {
             reject({
               error: {
                 code: 300,
-                message: "Kernel user registration error: " + erro
+                message: "Kernel user registration error: " + erro,
+                res: res
               }
             });
           } else {
