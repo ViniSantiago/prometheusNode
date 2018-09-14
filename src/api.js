@@ -23,9 +23,9 @@ console.log('KERNEL_ACCOUNT . . .: ' + Config.Env.kernel.url_kernel_account);
 console.log('');
 
 var mongo_option = {
-    auth: {
-        authdb: Config.Env.db.pwd,
-    },
+    // auth: {
+    //     authdb: Config.Env.db.pwd,
+    // },
     useNewUrlParser: true,
     pass: Config.Env.db.pwd,
     user: Config.Env.db.user,
