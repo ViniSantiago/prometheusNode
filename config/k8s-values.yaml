@@ -40,7 +40,7 @@ deployment:
   - name: MONGO_PWD
     value: "admin"
   - name: KERNEL_AUTHORIZATION
-    value: 7egQpg76YVH1YSkdUpzJL8MIbafZ2DJQ6AMFHV6n
+    value: 6R5HEf3RbetBZc7FQtqzktFnfm5OPu2jBwDrxwI7
   - name: KERNEL_ACCOUNT
     value: https://api.kernel.io.bb.com.br/kernel/api/v0/accounts
   ports:
