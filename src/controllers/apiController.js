@@ -23,7 +23,7 @@ exports.welcome = function(req, res) {
     });
     return res.json({
         hobb: "Projeto HOBB - Versão Inicial",
-        version: "0.0.1"
+        version: "0.0.2"
     });
 };
 
