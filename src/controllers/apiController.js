@@ -135,18 +135,19 @@ exports.signin = function (req, res) {
                         }
                     })
                 } else if (isMatch == false) {
-                        res.status(403).json({
-                            error: {
-                                code: 1,
-                                message: "Invalid Password"
-                            }
-                        })
+                    res.status(403).json({
+                        error: {
+                            code: 1,
+                            message: "Invalid Password"
+                        }
+                    })
                 } else {
-                        res.json({
-                            success: {
-                                data: user
-                            }
-                        })
+                    user.password = null;
+                    res.json({
+                        success: {
+                            data: user
+                        }
+                    })
 
                 }
             })
