@@ -125,10 +125,10 @@ services:
 # Networks config
 networks:
   default:
-    ipam:
-      driver: default
-      config:
-        - subnet: 192.168.5.0/24
+    # ipam:
+    #   driver: default
+    #   config:
+    #     - subnet: 192.168.5.0/24
 
 # Volume default docker
 # remove all: docker volume rm $(docker volume ls -q)
