@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: grafana-container
-        image: registry.io.bb.com.br:3389/hobb/grafana:0.0.1
+        image: registry.io.bb.com.br:3389/hobb/grafana:latest
         ports:
         - containerPort: 3000
           name: service
