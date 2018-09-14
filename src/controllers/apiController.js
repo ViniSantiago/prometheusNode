@@ -54,9 +54,10 @@ exports.sign_up_user = async function(req, res) {
     console.log("Sign_up Body\n" + Util.inspect(req.body, false, null));
     try {
         await validation.newUserValidation(req.body);
+        let userid = uuid.v4();
         let resultKernel = await validation.registerKernel(req.body);
         let user = await User.create({
-            userid: uuid.v4(),
+            userid: userid,
             kernelid: resultKernel,
             name: req.body.name,
             email: req.body.email,
