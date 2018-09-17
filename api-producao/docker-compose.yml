@@ -1,0 +1,144 @@
+version: '3.5'
+
+services:
+
+###############################################################################
+# Mongo - Banco de Dados
+###############################################################################
+  hobb-db:
+    container_name: 
+      hobb-db
+    image: 
+      mongo:4.0.2
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - 27017:27017
+    environment: 
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+
+###############################################################################
+# API - Node Application
+###############################################################################
+  hobb-api:
+    container_name: 
+      hobb-api   
+    image: 
+      registry.io.bb.com.br:3389/hobb-api:latest
+    ports:
+      - 3443:3443
+    environment:
+      - MONGO_URL=mongodb://hobb-db:27017/hobb
+      - MONGO_USER=admin
+      - MONGO_PWD=admin
+      - API_PORT=3443
+      - KERNEL_AUTHORIZATION=7egQpg76YVH1YSkdUpzJL8MIbafZ2DJQ6AMFHV6n
+      - KERNEL_ACCOUNT=https://api.kernel.io.bb.com.br/v0/accounts
+
+###############################################################################
+# mongo-express - Web-based MongoDB admin interface
+###############################################################################
+  mongo-express:
+    container_name: 
+      hobb-mongo-express
+    image: 
+      mongo-express:0.49.0
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_SERVER: hobb-db
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: admin
+
+###############################################################################
+# Swagger UI - API Development Tools
+###############################################################################
+  swagger:
+    container_name: 
+      hobb-swagger
+    image: 
+      registry.io.bb.com.br:3389/hobb/swagger:latest
+    ports:
+      - "8009:8080"
+    environment:
+      SWAGGER_JSON: /doc/swagger.json
+
+###############################################################################
+# Grafana - The open platform for analytics and monitoring 
+###############################################################################  
+  grafana:
+    container_name: 
+      hobb-grafana    
+    image: 
+      registry.io.bb.com.br:3389/hobb/grafana:latest
+    ports:
+      - 3000:3000
+    volumes:
+      - grafana:/data
+
+###############################################################################
+# Prometheus - Monitoring system & time series database
+###############################################################################
+  prometheus-service:
+    container_name: 
+      hobb-prometheus   
+    image: 
+      registry.io.bb.com.br:3389/hobb/prometheus:latest
+    ports:
+      - 9090:9090
+    volumes:
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'        
+
+# NODE EXPORTER
+  node-exporter-service:
+    image: prom/node-exporter:latest
+    ports:
+      - '9100:9100'
+
+# MONGO EXPORTER
+  mongodb-exporter-service:
+    image: 
+      targetprocess/mongodb_exporter
+    ports:
+      - "9001:9001"
+    command: 
+      -mongodb.uri=mongodb://admin:admin@hobb-db:27017
+      -mongodb.collect.replset=false
+      -mongodb.collect.oplog=false 
+
+
+################################################################################
+# Portainer for Docker monitoring
+################################################################################
+  portainer:
+    container_name: 
+      hobb-portainer   
+    image: 
+      portainer/portainer
+    ports:
+      - "9000:9000"
+    command: 
+      -H unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+
+# Volume default docker
+# remove all: docker volume rm $(docker volume ls -q)
+volumes:
+  mongo_data:
+  grafana:
+  prometheus_data:
+  portainer_data:    
+
+# Networks config
+networks:
+  default:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.5.0/24

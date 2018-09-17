@@ -115,10 +115,10 @@ exports.get_me = async function(req, res) {
     });
     return res;
 };
-exports.signin = function (req, res) {
+exports.signin = function(req, res) {
     User.findOne({
         email: req.body.email
-    }, function (err, user) {
+    }, function(err, user) {
         if (err) {
             res.status(403).json({
                 error: {
@@ -127,7 +127,7 @@ exports.signin = function (req, res) {
                 }
             })
         } else {
-            user.comparePassword(req.body.password, function (err, isMatch) {
+            user.comparePassword(req.body.password, function(err, isMatch) {
                 if (err) {
                     res.status(403).json({
                         error: {
@@ -195,14 +195,14 @@ exports.user_product_list = async function(req, res) {
         } else if (!user) {
             res.status(403).json({
                 error: {
-                    code: 100,
+                    code: 101,
                     message: "User not found"
                 }
             });
         } else {
             res.json({
                 success: {
-                    data: user
+                    data: user.products
                 }
             });
         }
@@ -238,35 +238,37 @@ exports.list_product = function(req, res) {
     });
 };
 
-exports.create_product = async function(req, res) {
-    var resultKernel = await validation.registerKernel(req.body);
-    await Product.create({
-            kernelid: resultKernel,
-            description: req.body.description,
-            balance: 0,
-            balanceAsString: "0",
-            transaction: [],
-            tags: req.body.tags
-        },
-        function(error, product) {
-            if (error) {
-                res.status(403).json({
-                    error: {
-                        code: 1,
-                        message: error
-                    }
-                });
-            }
+exports.add_product = async function(req, res) {
+    await User.findOne({
+        email: req.body.email
+    }, (error, user) => {
+        if (error) {
+            res.status(403).json({
+                error: {
+                    code: 1,
+                    message: error
+                }
+            });
+        } else if (!user) {
+            res.status(403).json({
+                error: {
+                    code: 101,
+                    message: "User not found"
+                }
+            });
+        } else {
             res.json({
                 success: {
-                    data: product
+                    data: user.products
                 }
             });
         }
-    );
+    });
+    user.updateOne(user.email, );
     PrometheusMetrics.requestCounter.inc({
         method: req.method,
         path: req.path,
         statusCode: res.statusCode
     });
+    return res;
 };

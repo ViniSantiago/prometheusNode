@@ -1,4 +1,4 @@
-FROM api-service:latest
+FROM registry.io.bb.com.br:3389/hobb/api:latest
 
 WORKDIR /var/app
 ADD package.json /var/app/

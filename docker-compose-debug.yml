@@ -1,6 +1,32 @@
-version: '3'
+version: '3.5'
 
 services:
+
+
+###############################################################################
+# API - Node Application
+###############################################################################
+  hobb-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.debug
+    image: 
+      registry.io.bb.com.br:3389/hobb/api:latest
+    container_name: hobb-api
+    command: nodemon --inspect=0.0.0.0:5858 /var/app/api.js
+    ports:
+      - '3443:3443'
+      - '5858:5858'
+    volumes:
+      - ./src/:/var/app
+    environment:
+      - MONGO_URL=mongodb://hobb-db:27017/hobb
+      - MONGO_USER=admin
+      - MONGO_PWD=admin
+      - API_PORT=3443
+      - KERNEL_AUTHORIZATION=7egQpg76YVH1YSkdUpzJL8MIbafZ2DJQ6AMFHV6n
+      - KERNEL_ACCOUNT=https://api.kernel.io.bb.com.br/v0/accounts
+
 
 ###############################################################################
 # Mongo - Banco de Dados
@@ -16,32 +42,6 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: admin
 
 ###############################################################################
-# API - Node Application
-###############################################################################
-   
-  api-service:
-    build:
-      context: .
-      dockerfile: Dockerfile.debug
-    image: api-service:latest
-    container_name: api
-    command: nodemon --inspect=0.0.0.0:5858 /var/app/api.js
-    ports:
-      - '3443:3443'
-      - '5858:5858'
-    volumes:
-      - ./src/:/var/app
-      
-    environment:
-      - MONGO_URL=mongodb://hobb-db:27017/hobb
-      - MONGO_USER=admin
-      - MONGO_PWD=admin
-      - API_PORT=3443
-      - KERNEL_AUTHORIZATION=7egQpg76YVH1YSkdUpzJL8MIbafZ2DJQ6AMFHV6n
-      - KERNEL_ACCOUNT=https://api.kernel.io.bb.com.br/v0/accounts
-
-
-###############################################################################
 # mongo-express - Web-based MongoDB admin interface
 ###############################################################################
   mongo-express:
@@ -55,47 +55,8 @@ services:
       - '8081:8081'
 
 ###############################################################################
-# Swagger UI - API Development Tools
-###############################################################################
-
-
-
-
-###############################################################################
-# Mocha - Integration Test
-###############################################################################
-  api-service-test:
-    build: 
-      context: .
-      dockerfile: Dockerfile.test
-    container_name: teste-api
-    ports:
-      - '3001:3443'
-    volumes:
-      - ./test/:/var/app/test
-    environment:
-      - MONGO_HOST=hobb-db
-      - MONGO_PORT=27017
-      - MONGO_URL=mongodb://hobb-db:27017/test  
-      - MONGO_PWD=admin
-      - MONGO_USER=admin  
-      - KERNEL_AUTHORIZATION=7egQpg76YVH1YSkdUpzJL8MIbafZ2DJQ6AMFHV6n
-      - KERNEL_ACCOUNT=https://api.kernel.io.bb.com.br/v0/accounts
-
-################################################################################
-# Portainer for Docker monitoring
-################################################################################
-
-  portainer:
-    image: portainer/portainer
-    ports:
-      - "9000:9000"
-    command: -H unix:///var/run/docker.sock
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
-
 # Networks config
+###############################################################################
 networks:
   default:
     ipam:
@@ -103,10 +64,10 @@ networks:
       config:
         - subnet: 192.168.5.0/24
 
-# Volume default docker
-# remove all: docker volume rm $(docker volume ls -q)
+###############################################################################
+# Volumes
+###############################################################################
+# to remove all: docker volume rm $(docker volume ls -q)
 volumes:
   mongo_data:
-  grafana:
-  prometheus:
-  portainer_data:
+

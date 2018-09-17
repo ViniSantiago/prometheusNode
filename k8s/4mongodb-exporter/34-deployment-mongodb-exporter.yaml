@@ -15,10 +15,13 @@ spec:
     spec:
       containers:
       - name: mongodb-exporter-container
-        image: targetprocess/mongodb_exporter
+        image: targetprocess/mongodb_exporter:latest
+        args: ["-mongodb.uri=mongodb://admin:admin@hobb-api-mongodb:27017/hobb", "-mongodb.collect.oplog=false", "-mongodb.collect.replset=false"]
         ports:
         - containerPort: 9001
           name: service
-        env:
-        - name: MONGODB_URL
-          value: "mongodb://admin:admin@hobb-api-mongodb:27017"          
+        # env:
+        # - name:  MONGODB_URL
+        #   value: "mongodb://admin:admin@hobb-api-mongodb:27017/hobb" 
+        # - name:  HTTP_AUTH
+        #   value: "admin:admin"
