@@ -16,11 +16,11 @@ const PrometheusMetrics = {
 };
 
 exports.welcome = function(req, res) {
-    PrometheusMetrics.requestCounter.inc({
-        method: req.method,
-        path: req.path,
-        statusCode: res.statusCode
-    });
+    // PrometheusMetrics.requestCounter.inc({
+    //     method: req.method,
+    //     path: req.path,
+    //     statusCode: res.statusCode
+    // });
     return res.json({
         hobb: "Projeto HOBB - Versão Inicial",
         version: "0.0.2"
@@ -43,11 +43,11 @@ exports.list_all_users = function(req, res) {
             }
         });
     });
-    PrometheusMetrics.requestCounter.inc({
-        method: req.method,
-        path: req.path,
-        statusCode: res.statusCode
-    });
+    // PrometheusMetrics.requestCounter.inc({
+    //     method: req.method,
+    //     path: req.path,
+    //     statusCode: res.statusCode
+    // });
 };
 
 exports.sign_up_user = async function(req, res) {
@@ -74,11 +74,11 @@ exports.sign_up_user = async function(req, res) {
     } catch (error) {
         res.status(403).json(error);
     }
-    PrometheusMetrics.requestCounter.inc({
-        method: req.method,
-        path: req.path,
-        statusCode: res.statusCode
-    });
+    // PrometheusMetrics.requestCounter.inc({
+    //     method: req.method,
+    //     path: req.path,
+    //     statusCode: res.statusCode
+    // });
     return res;
 };
 
@@ -108,11 +108,11 @@ exports.get_me = async function(req, res) {
             });
         }
     });
-    PrometheusMetrics.requestCounter.inc({
-        method: req.method,
-        path: req.path,
-        statusCode: res.statusCode
-    });
+    // PrometheusMetrics.requestCounter.inc({
+    //     method: req.method,
+    //     path: req.path,
+    //     statusCode: res.statusCode
+    // });
     return res;
 };
 exports.signin = function (req, res) {
@@ -174,11 +174,11 @@ exports.delete_user = function(req, res) {
             });
         }
     });
-    PrometheusMetrics.requestCounter.inc({
-        method: req.method,
-        path: req.path,
-        statusCode: res.statusCode
-    });
+    // PrometheusMetrics.requestCounter.inc({
+    //     method: req.method,
+    //     path: req.path,
+    //     statusCode: res.statusCode
+    // });
 };
 
 exports.user_product_list = async function(req, res) {
@@ -207,11 +207,11 @@ exports.user_product_list = async function(req, res) {
             });
         }
     });
-    PrometheusMetrics.requestCounter.inc({
-        method: req.method,
-        path: req.path,
-        statusCode: res.statusCode
-    });
+    // PrometheusMetrics.requestCounter.inc({
+    //     method: req.method,
+    //     path: req.path,
+    //     statusCode: res.statusCode
+    // });
     return res;
 };
 
@@ -231,11 +231,11 @@ exports.list_product = function(req, res) {
             }
         });
     });
-    PrometheusMetrics.requestCounter.inc({
-        method: req.method,
-        path: req.path,
-        statusCode: res.statusCode
-    });
+    // PrometheusMetrics.requestCounter.inc({
+    //     method: req.method,
+    //     path: req.path,
+    //     statusCode: res.statusCode
+    // });
 };
 
 exports.create_product = async function(req, res) {
@@ -264,9 +264,9 @@ exports.create_product = async function(req, res) {
             });
         }
     );
-    PrometheusMetrics.requestCounter.inc({
-        method: req.method,
-        path: req.path,
-        statusCode: res.statusCode
-    });
+    // PrometheusMetrics.requestCounter.inc({
+    //     method: req.method,
+    //     path: req.path,
+    //     statusCode: res.statusCode
+    // });
 };

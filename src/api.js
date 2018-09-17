@@ -8,7 +8,7 @@ var express = require('express'),
     User = require('./models/userModel'),
     Config = require('./config/env'),
     bodyParser = require('body-parser'),
-    Prometheus = require('prom-client');
+    Prometheus = require('./util/prometheus.js');
 
 
 
@@ -23,9 +23,9 @@ console.log('KERNEL_ACCOUNT . . .: ' + Config.Env.kernel.url_kernel_account);
 console.log('');
 
 var mongo_option = {
-    // auth: {
-    //     authdb: Config.Env.db.pwd,
-    // },
+    auth: {
+        authdb: Config.Env.db.pwd,
+    },
     useNewUrlParser: true,
     pass: Config.Env.db.pwd,
     user: Config.Env.db.user,
@@ -40,9 +40,8 @@ mongoose.connect(Config.Env.db.url, mongo_option, function(error) {
     }
 });
 
-const collectDefaultMetrics = Prometheus.collectDefaultMetrics;
-collectDefaultMetrics({ prefix: 'hobb_' });
-collectDefaultMetrics({ timeout: 5000 });
+app.use(Prometheus.requestCounters);  
+app.use(Prometheus.responseCounters);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -65,6 +64,9 @@ app.use(function(req, res, next) {
 
 var routes = require('./routes/apiRoutes.js');
 routes(app);
+
+Prometheus.injectMetricsRoute(app);
+Prometheus.startCollection();  
 
 app.use(function(req, res) {
     var msgerror = 'Url \'' + req.originalUrl + '\' not found'
