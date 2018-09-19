@@ -5,15 +5,10 @@ var uuid = require("node-uuid");
 var mongoose = require("mongoose");
 var User = mongoose.model("User");
 var Product = mongoose.model("Product");
-var Prometheus = require("prom-client");
+var Prometheus = require('../util/prometheus.js');
 // Prometheus Counter for API calls
-const PrometheusMetrics = {
-    requestCounter: new Prometheus.Counter({
-        name: "hobb_api",
-        help: "Number of routers call",
-        labelNames: ["method", "path", "statusCode"]
-    })
-};
+
+
 
 exports.welcome = function(req, res) {
     // PrometheusMetrics.requestCounter.inc({
@@ -55,10 +50,10 @@ exports.sign_up_user = async function(req, res) {
     try {
         await validation.newUserValidation(req.body);
         let userid = uuid.v4();
-        let resultKernel = await validation.registerKernel(req.body);
+        // let resultKernel = await validation.registerKernel(req.body);
         let user = await User.create({
             userid: userid,
-            kernelid: resultKernel,
+            kernelid: "resultKernel",
             name: req.body.name,
             email: req.body.email,
             password: req.body.password,
@@ -73,12 +68,19 @@ exports.sign_up_user = async function(req, res) {
         });
     } catch (error) {
         res.status(403).json(error);
+        Prometheus.responsesError.inc({
+        method: req.method,
+        path: req.path,
+        status: res.statusCode,
+        message: error.error.message
+        })
     }
     // PrometheusMetrics.requestCounter.inc({
     //     method: req.method,
     //     path: req.path,
     //     statusCode: res.statusCode
     // });
+
     return res;
 };
 

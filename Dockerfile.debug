@@ -4,14 +4,9 @@ WORKDIR /data/
 
 ENV NODE_ENV=development
 
-ENV HTTP_PROXY=http://10.8.5.222:3128
-
-ENV HTTPS_PROXY=http://10.8.5.222:3128
 
 COPY package.json /data/
 
-ENV HTTP_PROXY=http://10.8.5.222:3128
-ENV HTTPS_PROXY=http://10.8.5.222:3128
 
 RUN npm install && npm install -g nodemon
 

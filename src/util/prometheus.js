@@ -7,7 +7,7 @@ var Prometheus = require('prom-client');
 // var Logger = require('./logger');
 
 const collectDefaultMetrics = Prometheus.collectDefaultMetrics;
-collectDefaultMetrics({ prefix: 'hobbTest_' });
+collectDefaultMetrics({ prefix: 'hobb2_' });
 collectDefaultMetrics({ timeout: 5000 });
 
 /**
@@ -15,7 +15,7 @@ collectDefaultMetrics({ timeout: 5000 });
  * e.g. a GET and a POST call will be counted as 2 different calls
  */
 module.exports.numOfRequests = numOfRequests = new Counter({  
-    name: 'numOfRequests',
+    name: 'hobb1_numOfRequests',
     help: 'Number of requests made',
     labelNames: ['method']
 });
@@ -25,7 +25,7 @@ module.exports.numOfRequests = numOfRequests = new Counter({
  * e.g. /foo and /bar will be counted as 2 different paths
  */
 module.exports.pathsTaken = pathsTaken = new Counter({  
-    name: 'pathsTaken',
+    name: 'hobb1_pathsTaken',
     help: 'Paths taken in the app',
     labelNames: ['path']
 });
@@ -34,10 +34,17 @@ module.exports.pathsTaken = pathsTaken = new Counter({
  * A Prometheus summary to record the HTTP method, path, response code and response time
  */
 module.exports.responses = responses = new Summary({  
-    name: 'responses',
+    name: 'hobb1_responses',
     help: 'Response time in millis',
     labelNames: ['method', 'path', 'status']
 });
+
+module.exports.responsesError= new Counter({  
+    name: 'hobb1_responsesError',
+    help: 'Response time in millis',
+    labelNames: ['method', 'path', 'status', 'message']
+});
+
 
 /**
  * This funtion will start the collection of metrics and should be called from within in the main js file
@@ -68,6 +75,12 @@ module.exports.responseCounters = ResponseTime(function (req, res, time) {
         responses.labels(req.method, req.url, res.statusCode).observe(time);
     }
 })
+
+module.exports.responseCountersError = function (req, res) {  
+
+    responsesError.labels(req.method, req.url, res.statusCode, res.error.error);
+
+}
 
 /**
  * In order to have Prometheus get the data from this app a specific URL is registered

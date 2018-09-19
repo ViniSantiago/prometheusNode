@@ -64,44 +64,36 @@ services:
 ###############################################################################
 # Mocha - Integration Test
 ###############################################################################
-  api-service-test:
-    build: 
-      context: .
-      dockerfile: Dockerfile.test
-    container_name: teste-api
-    ports:
-      - '3001:3443'
-    volumes:
-      - ./test/:/var/app/test
-    environment:
-      - MONGO_HOST=hobb-db
-      - MONGO_PORT=27017
-      - MONGO_URL=mongodb://hobb-db:27017/test  
-      - MONGO_PWD=admin
-      - MONGO_USER=admin  
-      - KERNEL_AUTHORIZATION=7egQpg76YVH1YSkdUpzJL8MIbafZ2DJQ6AMFHV6n
-      - KERNEL_ACCOUNT=https://api.kernel.io.bb.com.br/v0/accounts
+  # api-service-test:
+  #   build: 
+  #     context: .
+  #     dockerfile: Dockerfile.test
+  #   container_name: teste-api
+  #   ports:
+  #     - '3001:3443'
+  #   volumes:
+  #     - ./test/:/var/app/test
+  #   environment:
+  #     - MONGO_HOST=hobb-db
+  #     - MONGO_PORT=27017
+  #     - MONGO_URL=mongodb://hobb-db:27017/test  
+  #     - MONGO_PWD=admin
+  #     - MONGO_USER=admin  
+  #     - KERNEL_AUTHORIZATION=7egQpg76YVH1YSkdUpzJL8MIbafZ2DJQ6AMFHV6n
+  #     - KERNEL_ACCOUNT=https://api.kernel.io.bb.com.br/v0/accounts
 
 ################################################################################
 # Portainer for Docker monitoring
 ################################################################################
 
-  portainer:
-    image: portainer/portainer
-    ports:
-      - "9000:9000"
-    command: -H unix:///var/run/docker.sock
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
 
 # Networks config
 networks:
   default:
-    ipam:
-      driver: default
-      config:
-        - subnet: 192.168.5.0/24
+    # ipam:
+    #   driver: default
+    #   config:
+    #     - subnet: 192.168.5.0/24
 
 # Volume default docker
 # remove all: docker volume rm $(docker volume ls -q)
